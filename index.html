@@ -1,132 +1,364 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Portfólio</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="./dist/output.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body>
-    <header>
-        <nav class="container">
-            <div class="logo">Portfólio</div>
-            <ul class="nav-links">
-                <li><a href="#home">Início</a></li>
-                <li><a href="#about">Sobre</a></li>
-                <li><a href="#projects">Projetos</a></li>
-                <li><a href="#contact">Contato</a></li>
-                <li><button id="theme-toggle"><i class="fas fa-moon"></i></button></li>
-            </ul>
-            <div class="hamburger">
-                <i class="fas fa-bars"></i>
-            </div>
-        </nav>
-    </header>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased">
 
-    <main>
-        <section id="home" class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h1>Olá, eu sou <span class="highlight">Dev</span></h1>
-                    <p>Desenvolvedor Web Full Stack apaixonado por criar soluções incríveis.</p>
-                    <a href="#projects" class="btn">Ver Projetos</a>
+    <!-- Header / Navigation -->
+    <nav class="fixed w-full bg-white/80 backdrop-blur-md shadow-sm z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+                        Portfólio
+                    </span>
                 </div>
-            </div>
-        </section>
-
-        <section id="about" class="about">
-            <div class="container">
-                <h2 class="section-title">Sobre Mim</h2>
-                <div class="about-content">
-                    <div class="about-text">
-                        <p>Sou um desenvolvedor apaixonado por tecnologia e inovação. Tenho experiência em desenvolvimento web, criando sites responsivos e funcionais.</p>
-                        <p>Estou sempre em busca de novos desafios e aprendizados. Adoro transformar ideias em código e ver projetos ganhando vida.</p>
-                        <div class="skills">
-                            <span class="skill-tag">HTML5</span>
-                            <span class="skill-tag">CSS3</span>
-                            <span class="skill-tag">JavaScript</span>
-                            <span class="skill-tag">React</span>
-                            <span class="skill-tag">Node.js</span>
-                            <span class="skill-tag">Git</span>
-                        </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#home" class="hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Início</a>
+                        <a href="#about" class="hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Sobre</a>
+                        <a href="#projects" class="hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Projetos</a>
+                        <a href="#contact" class="hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Contato</a>
                     </div>
                 </div>
+                <!-- Mobile menu button -->
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Abrir menu</span>
+                        <i data-lucide="menu" class="h-6 w-6"></i>
+                    </button>
+                </div>
             </div>
-        </section>
+        </div>
+        <!-- Mobile menu, show/hide based on menu state. -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg">
+                <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium hover:text-primary hover:bg-gray-50">Início</a>
+                <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium hover:text-primary hover:bg-gray-50">Sobre</a>
+                <a href="#projects" class="block px-3 py-2 rounded-md text-base font-medium hover:text-primary hover:bg-gray-50">Projetos</a>
+                <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium hover:text-primary hover:bg-gray-50">Contato</a>
+            </div>
+        </div>
+    </nav>
 
-        <section id="projects" class="projects">
-            <div class="container">
-                <h2 class="section-title">Meus Projetos</h2>
-                <div class="projects-grid">
-                    <!-- Projeto 1 -->
-                    <div class="project-card">
-                        <div class="project-image">
-                            <!-- Placeholder image using CSS or external service -->
-                            <div class="img-placeholder">Projeto 1</div>
+    <!-- Hero Section -->
+    <section id="home" class="pt-24 pb-12 sm:pt-32 sm:pb-16 lg:pb-24 bg-gradient-to-b from-gray-50 to-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
+                <span class="block xl:inline">Olá, eu sou</span>
+                <span class="block text-primary">Desenvolvedor Criativo</span>
+            </h1>
+            <p class="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+                Construindo experiências digitais bonitas, funcionais e focadas no usuário. Transformo ideias em realidade através de código limpo e design moderno.
+            </p>
+            <div class="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
+                <div class="rounded-md shadow">
+                    <a href="#projects" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-blue-600 md:py-4 md:text-lg md:px-10 transition-all hover:shadow-lg transform hover:-translate-y-1">
+                        Ver Projetos
+                    </a>
+                </div>
+                <div class="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
+                    <a href="#contact" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-primary bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10 transition-all hover:shadow-md">
+                        Contato
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:text-center">
+                <h2 class="text-base text-primary font-semibold tracking-wide uppercase">Sobre Mim</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    Paixão por criar e resolver problemas
+                </p>
+                <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+                    Sou um desenvolvedor apaixonado por tecnologia. Tenho experiência em desenvolvimento web moderno, sempre buscando aprender novas ferramentas e melhorar minhas habilidades.
+                </p>
+            </div>
+
+            <div class="mt-10">
+                <dl class="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
+                    <div class="relative">
+                        <dt>
+                            <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-primary text-white">
+                                <i data-lucide="code" class="h-6 w-6"></i>
+                            </div>
+                            <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Desenvolvimento Frontend</p>
+                        </dt>
+                        <dd class="mt-2 ml-16 text-base text-gray-500">
+                            Especialista em criar interfaces responsivas e interativas utilizando HTML, CSS, JavaScript e frameworks modernos como React e Tailwind.
+                        </dd>
+                    </div>
+
+                    <div class="relative">
+                        <dt>
+                            <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-primary text-white">
+                                <i data-lucide="server" class="h-6 w-6"></i>
+                            </div>
+                            <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Backend & API</p>
+                        </dt>
+                        <dd class="mt-2 ml-16 text-base text-gray-500">
+                            Construção de APIs robustas e escaláveis, integração com bancos de dados e lógica de servidor.
+                        </dd>
+                    </div>
+
+                    <div class="relative">
+                        <dt>
+                            <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-primary text-white">
+                                <i data-lucide="layout" class="h-6 w-6"></i>
+                            </div>
+                            <p class="ml-16 text-lg leading-6 font-medium text-gray-900">UI/UX Design</p>
+                        </dt>
+                        <dd class="mt-2 ml-16 text-base text-gray-500">
+                            Foco na experiência do usuário e design limpo, garantindo que o produto final seja intuitivo e agradável de usar.
+                        </dd>
+                    </div>
+
+                    <div class="relative">
+                        <dt>
+                            <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-primary text-white">
+                                <i data-lucide="smartphone" class="h-6 w-6"></i>
+                            </div>
+                            <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Mobile First</p>
+                        </dt>
+                        <dd class="mt-2 ml-16 text-base text-gray-500">
+                            Desenvolvimento focado em dispositivos móveis, garantindo que o site funcione perfeitamente em qualquer tamanho de tela.
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-base text-primary font-semibold tracking-wide uppercase">Portfólio</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    Meus Projetos Recentes
+                </p>
+                <p class="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
+                    Confira alguns dos trabalhos que desenvolvi recentemente.
+                </p>
+            </div>
+
+            <div class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                <!-- Project 1 -->
+                <div class="flex flex-col rounded-lg shadow-lg overflow-hidden bg-white hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
+                    <div class="flex-shrink-0">
+                        <img class="h-48 w-full object-cover" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80" alt="Projeto Web">
+                    </div>
+                    <div class="flex-1 p-6 flex flex-col justify-between">
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-primary">
+                                <a href="#" class="hover:underline">Web App</a>
+                            </p>
+                            <a href="#" class="block mt-2">
+                                <p class="text-xl font-semibold text-gray-900">Plataforma E-commerce</p>
+                                <p class="mt-3 text-base text-gray-500">
+                                    Uma solução completa de comércio eletrônico com carrinho de compras, pagamentos e painel administrativo.
+                                </p>
+                            </a>
                         </div>
-                        <div class="project-info">
-                            <h3>Nome do Projeto 1</h3>
-                            <p>Uma breve descrição sobre o projeto e as tecnologias utilizadas.</p>
-                            <div class="project-links">
-                                <a href="#" target="_blank"><i class="fab fa-github"></i> Código</a>
-                                <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i> Demo</a>
+                        <div class="mt-6 flex items-center">
+                            <div class="flex-shrink-0">
+                                <span class="sr-only">Tecnologias</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">React</span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Node.js</span>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Projeto 2 -->
-                    <div class="project-card">
-                        <div class="project-image">
-                             <div class="img-placeholder">Projeto 2</div>
+                <!-- Project 2 -->
+                <div class="flex flex-col rounded-lg shadow-lg overflow-hidden bg-white hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
+                    <div class="flex-shrink-0">
+                        <img class="h-48 w-full object-cover" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Dashboard">
+                    </div>
+                    <div class="flex-1 p-6 flex flex-col justify-between">
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-primary">
+                                <a href="#" class="hover:underline">Dashboard</a>
+                            </p>
+                            <a href="#" class="block mt-2">
+                                <p class="text-xl font-semibold text-gray-900">Analytics Dashboard</p>
+                                <p class="mt-3 text-base text-gray-500">
+                                    Painel de controle para visualização de dados em tempo real, com gráficos interativos e relatórios.
+                                </p>
+                            </a>
                         </div>
-                        <div class="project-info">
-                            <h3>Nome do Projeto 2</h3>
-                            <p>Uma breve descrição sobre o projeto e as tecnologias utilizadas.</p>
-                            <div class="project-links">
-                                <a href="#" target="_blank"><i class="fab fa-github"></i> Código</a>
-                                <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i> Demo</a>
+                        <div class="mt-6 flex items-center">
+                            <div class="flex-shrink-0">
+                                <span class="sr-only">Tecnologias</span>
+                            </div>
+                             <div class="flex gap-2">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">Vue.js</span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Tailwind</span>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Projeto 3 -->
-                    <div class="project-card">
-                        <div class="project-image">
-                             <div class="img-placeholder">Projeto 3</div>
+                <!-- Project 3 -->
+                <div class="flex flex-col rounded-lg shadow-lg overflow-hidden bg-white hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
+                    <div class="flex-shrink-0">
+                        <img class="h-48 w-full object-cover" src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1355&q=80" alt="App Mobile">
+                    </div>
+                    <div class="flex-1 p-6 flex flex-col justify-between">
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-primary">
+                                <a href="#" class="hover:underline">Mobile</a>
+                            </p>
+                            <a href="#" class="block mt-2">
+                                <p class="text-xl font-semibold text-gray-900">App de Finanças</p>
+                                <p class="mt-3 text-base text-gray-500">
+                                    Aplicativo para gestão financeira pessoal, com categorização de gastos e metas de economia.
+                                </p>
+                            </a>
                         </div>
-                        <div class="project-info">
-                            <h3>Nome do Projeto 3</h3>
-                            <p>Uma breve descrição sobre o projeto e as tecnologias utilizadas.</p>
-                            <div class="project-links">
-                                <a href="#" target="_blank"><i class="fab fa-github"></i> Código</a>
-                                <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i> Demo</a>
+                        <div class="mt-6 flex items-center">
+                            <div class="flex-shrink-0">
+                                <span class="sr-only">Tecnologias</span>
+                            </div>
+                             <div class="flex gap-2">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Flutter</span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Dart</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="contact" class="contact">
-            <div class="container">
-                <h2 class="section-title">Entre em Contato</h2>
-                <p>Tem um projeto em mente ou quer apenas bater um papo? Entre em contato!</p>
-                <div class="social-links">
-                    <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
-                    <a href="#" class="social-btn"><i class="fab fa-github"></i> GitHub</a>
-                    <a href="mailto:seuemail@exemplo.com" class="social-btn"><i class="fas fa-envelope"></i> Email</a>
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-lg mx-auto md:max-w-none md:grid md:grid-cols-2 md:gap-8">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-gray-900 sm:text-3xl">Entre em contato</h2>
+                    <p class="mt-3 text-lg text-gray-500">
+                        Tem uma ideia de projeto ou quer conversar sobre tecnologia? Mande uma mensagem!
+                    </p>
+                    <div class="mt-9">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i data-lucide="phone" class="h-6 w-6 text-gray-400"></i>
+                            </div>
+                            <div class="ml-3 text-base text-gray-500">
+                                <p>+55 (11) 99999-9999</p>
+                                <p class="mt-1">Seg-Sex 9am to 6pm</p>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex">
+                            <div class="flex-shrink-0">
+                                <i data-lucide="mail" class="h-6 w-6 text-gray-400"></i>
+                            </div>
+                            <div class="ml-3 text-base text-gray-500">
+                                <p>contato@seudominio.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-12 sm:mt-16 md:mt-0">
+                    <h2 class="text-2xl font-extrabold text-gray-900 sm:text-3xl">Envie uma mensagem</h2>
+                    <form action="#" method="POST" class="mt-6 grid grid-cols-1 gap-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
+                            <div class="mt-1">
+                                <input type="text" name="name" id="name" autocomplete="name" class="py-3 px-4 block w-full shadow-sm focus:ring-primary focus:border-primary border-gray-300 rounded-md border" placeholder="Seu nome">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <div class="mt-1">
+                                <input type="email" name="email" id="email" autocomplete="email" class="py-3 px-4 block w-full shadow-sm focus:ring-primary focus:border-primary border-gray-300 rounded-md border" placeholder="seu@email.com">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700">Mensagem</label>
+                            <div class="mt-1">
+                                <textarea id="message" name="message" rows="4" class="py-3 px-4 block w-full shadow-sm focus:ring-primary focus:border-primary border border-gray-300 rounded-md" placeholder="Sua mensagem..."></textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="submit" class="w-full inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-primary hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">
+                                Enviar
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2023 Meu Portfólio. Todos os direitos reservados.</p>
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center flex-col md:flex-row">
+                <div class="mb-4 md:mb-0">
+                    <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-green-400">
+                        Portfólio
+                    </span>
+                    <p class="mt-2 text-sm text-gray-300">© 2023 Todos os direitos reservados.</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <span class="sr-only">GitHub</span>
+                        <i data-lucide="github" class="h-6 w-6"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <span class="sr-only">LinkedIn</span>
+                        <i data-lucide="linkedin" class="h-6 w-6"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <span class="sr-only">Twitter</span>
+                        <i data-lucide="twitter" class="h-6 w-6"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- Scripts -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Mobile Menu Toggle
+        const btn = document.querySelector('[aria-controls="mobile-menu"]');
+        const menu = document.querySelector("#mobile-menu");
+
+        if (btn && menu) {
+            btn.addEventListener("click", () => {
+                menu.classList.toggle("hidden");
+            });
+        }
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
 </html>

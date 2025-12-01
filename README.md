@@ -1,42 +1,33 @@
-# Meu Portfólio Pessoal
+# Meu Portfólio
 
-Este é um template de portfólio pessoal simples e moderno, criado para ser hospedado no GitHub Pages.
+Este é um site de portfólio moderno e responsivo construído com HTML e Tailwind CSS.
 
-## Como usar este projeto
+## Pré-requisitos
 
-### 1. Personalização
+- Node.js e npm instalados.
 
-Abra o arquivo `index.html` e edite as informações para corresponder ao seu perfil:
-- **Sobre Mim**: Altere o texto da seção "Sobre Mim" e atualize a lista de habilidades.
-- **Projetos**: Substitua os cards de exemplo pelos seus projetos reais. Adicione links para o código e demonstração.
-- **Contato**: Atualize seus links de redes sociais e e-mail.
+## Como usar
 
-### 2. Estilização
+1.  Instale as dependências:
+    ```bash
+    npm install
+    ```
 
-O arquivo `style.css` contém todo o estilo do site. Você pode alterar as cores principais modificando as variáveis CSS no topo do arquivo:
+2.  Para desenvolver (com watch mode):
+    ```bash
+    npm run watch
+    ```
 
-```css
-:root {
-    --primary-color: #2563eb; /* Cor principal */
-    /* ... outras variáveis */
-}
-```
+3.  Para compilar para produção (minificado):
+    ```bash
+    npm run build
+    ```
 
-### 3. Publicando no GitHub Pages
+4.  Abra o arquivo `index.html` no seu navegador.
 
-Para colocar seu site no ar gratuitamente usando o GitHub Pages:
+## Estrutura
 
-1.  Vá até a aba **Settings** (Configurações) do seu repositório no GitHub.
-2.  No menu lateral esquerdo, clique em **Pages**.
-3.  Em **Build and deployment** > **Source**, selecione **Deploy from a branch**.
-4.  Em **Branch**, selecione `main` (ou a branch que você está usando) e a pasta `/ (root)`.
-5.  Clique em **Save**.
-
-Após alguns minutos, seu site estará disponível no link fornecido pelo GitHub (geralmente `https://seu-usuario.github.io/nome-do-repositorio/`).
-
-## Tecnologias
-
-- HTML5
-- CSS3 (Variáveis, Flexbox, Grid)
-- JavaScript (Vanilla)
-- Font Awesome (Ícones)
+-   `index.html`: Arquivo principal do site.
+-   `src/input.css`: Arquivo CSS de entrada do Tailwind.
+-   `dist/output.css`: Arquivo CSS gerado (não edite diretamente).
+-   `tailwind.config.js`: Configuração do Tailwind.
