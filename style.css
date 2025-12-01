@@ -35,3 +35,60 @@ h1, h2, h3, h4, h5, h6 {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* 5. Premium Texture & Details */
+
+/* Noise Texture Overlay */
+.bg-noise {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 50; /* Above most content, but below modals/nav if needed. Low opacity makes it fine. */
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Blueprint Grid Background */
+.bg-grid-pattern {
+    background-size: 40px 40px;
+    background-image:
+        linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+}
+
+/* Premium Card (Glassmorphism) */
+.card-premium {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-premium:hover {
+    transform: translateY(-5px);
+    border-color: rgba(23, 23, 23, 0.8); /* neutral-900 */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+}
+
+/* Floating Math Symbols */
+.math-symbol {
+    position: absolute;
+    font-family: 'Times New Roman', serif;
+    font-style: italic;
+    color: rgba(0, 0, 0, 0.04);
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+}
+
+/* Typography Interaction */
+.hover-reveal {
+    transition: color 0.5s ease;
+}
+.hover-reveal:hover {
+    color: #171717; /* neutral-900 */
+}
