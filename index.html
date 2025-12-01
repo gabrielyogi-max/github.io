@@ -52,77 +52,61 @@
     <!-- Noise Texture Overlay -->
     <div class="bg-noise"></div>
 
-    <!-- Desktop Sidebar Navigation -->
-    <aside class="fixed inset-y-0 left-0 w-72 bg-white/80 backdrop-blur-md border-r border-neutral-100 hidden lg:flex flex-col justify-between p-8 z-50">
-        <!-- Logo -->
-        <div>
-            <span class="text-2xl font-display font-bold tracking-tight text-neutral-900 block mb-12">
+    <!-- Navigation Header -->
+    <header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-neutral-100">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 h-20 flex justify-between items-center">
+            
+            <!-- Logo -->
+            <a href="#" class="text-xl font-display font-bold tracking-tight text-neutral-900">
                 DEV.AI
-            </span>
+            </a>
 
-            <nav class="space-y-6">
-                <a href="#home" class="flex items-center gap-4 text-base font-medium text-neutral-600 hover:text-neutral-900 transition-colors group">
-                    <span class="w-8 h-[1px] bg-neutral-300 group-hover:bg-neutral-900 group-hover:w-12 transition-all duration-300"></span>
-                    Início
-                </a>
-                <a href="#about" class="flex items-center gap-4 text-base font-medium text-neutral-600 hover:text-neutral-900 transition-colors group">
-                    <span class="w-8 h-[1px] bg-neutral-300 group-hover:bg-neutral-900 group-hover:w-12 transition-all duration-300"></span>
-                    Sobre
-                </a>
-                <a href="#projects" class="flex items-center gap-4 text-base font-medium text-neutral-600 hover:text-neutral-900 transition-colors group">
-                    <span class="w-8 h-[1px] bg-neutral-300 group-hover:bg-neutral-900 group-hover:w-12 transition-all duration-300"></span>
-                    Projetos
-                </a>
-                <a href="#contact" class="flex items-center gap-4 text-base font-medium text-neutral-600 hover:text-neutral-900 transition-colors group">
-                    <span class="w-8 h-[1px] bg-neutral-300 group-hover:bg-neutral-900 group-hover:w-12 transition-all duration-300"></span>
-                    Contato
-                </a>
+            <!-- Desktop Menu -->
+            <nav class="hidden lg:flex items-center gap-8">
+                <a href="#home" class="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">Início</a>
+                <a href="#about" class="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">Sobre</a>
+                <a href="#projects" class="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">Projetos</a>
+                <a href="#contact" class="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">Contato</a>
+                
+                <div class="h-4 w-[1px] bg-neutral-300 mx-2"></div>
+                
+                <div class="flex gap-4">
+                    <a href="#" class="text-neutral-400 hover:text-neutral-900 transition-colors">
+                        <i data-lucide="github" class="h-5 w-5"></i>
+                    </a>
+                    <a href="#" class="text-neutral-400 hover:text-neutral-900 transition-colors">
+                        <i data-lucide="linkedin" class="h-5 w-5"></i>
+                    </a>
+                </div>
             </nav>
-        </div>
 
-        <!-- Footer / Socials -->
-        <div>
-            <div class="flex gap-4 mb-8">
-                <a href="#" class="text-neutral-400 hover:text-neutral-900 transition-colors">
-                    <i data-lucide="github" class="h-5 w-5"></i>
-                </a>
-                <a href="#" class="text-neutral-400 hover:text-neutral-900 transition-colors">
-                    <i data-lucide="linkedin" class="h-5 w-5"></i>
-                </a>
-                <a href="#" class="text-neutral-400 hover:text-neutral-900 transition-colors">
-                    <i data-lucide="twitter" class="h-5 w-5"></i>
-                </a>
-            </div>
-            <p class="text-xs text-neutral-400 leading-relaxed">
-                &copy; 2023 DEV.AI.<br>All rights reserved.
-            </p>
-        </div>
-    </aside>
-
-    <!-- Mobile Header -->
-    <header class="lg:hidden fixed w-full bg-white/80 backdrop-blur-md z-40 border-b border-neutral-100 transition-all duration-300">
-        <div class="px-6 h-20 flex justify-between items-center">
-            <span class="text-xl font-display font-bold tracking-tight text-neutral-900">
-                DEV.AI
-            </span>
-            <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-neutral-900 hover:bg-neutral-100 focus:outline-none" id="mobile-menu-btn">
+            <!-- Mobile Menu Button -->
+            <button type="button" class="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-neutral-900 hover:bg-neutral-100 focus:outline-none" id="mobile-menu-btn">
                 <i data-lucide="menu" class="h-6 w-6"></i>
             </button>
         </div>
-        
-        <!-- Mobile menu -->
-        <div class="hidden bg-white border-b border-neutral-100" id="mobile-menu">
-            <div class="px-4 pt-2 pb-6 space-y-2">
-                <a href="#home" class="block px-3 py-2 text-lg font-display font-medium text-neutral-900 hover:bg-neutral-50 rounded-lg">Início</a>
-                <a href="#about" class="block px-3 py-2 text-lg font-display font-medium text-neutral-900 hover:bg-neutral-50 rounded-lg">Sobre</a>
-                <a href="#projects" class="block px-3 py-2 text-lg font-display font-medium text-neutral-900 hover:bg-neutral-50 rounded-lg">Projetos</a>
-                <a href="#contact" class="block px-3 py-2 text-lg font-display font-medium text-neutral-900 hover:bg-neutral-50 rounded-lg">Contato</a>
+
+        <!-- Mobile Menu Dropdown -->
+        <div class="hidden lg:hidden bg-white border-b border-neutral-100" id="mobile-menu">
+            <div class="px-6 py-4 space-y-4">
+                <a href="#home" class="block text-lg font-display font-medium text-neutral-900">Início</a>
+                <a href="#about" class="block text-lg font-display font-medium text-neutral-900">Sobre</a>
+                <a href="#projects" class="block text-lg font-display font-medium text-neutral-900">Projetos</a>
+                <a href="#contact" class="block text-lg font-display font-medium text-neutral-900">Contato</a>
+                <div class="pt-4 flex gap-6 border-t border-neutral-100">
+                    <a href="#" class="text-neutral-500 hover:text-neutral-900 transition-colors">
+                        <i data-lucide="github" class="h-6 w-6"></i>
+                    </a>
+                    <a href="#" class="text-neutral-500 hover:text-neutral-900 transition-colors">
+                        <i data-lucide="linkedin" class="h-6 w-6"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Wrapper -->
-    <main class="lg:pl-72 w-full flex flex-col min-h-screen">
+    <!-- Main Content -->
+    <main class="w-full flex flex-col min-h-screen">
         
         <!-- Hero Section -->
         <section id="home" class="relative pt-32 pb-20 lg:pt-0 lg:h-screen flex items-center overflow-hidden">
@@ -132,7 +116,7 @@
                 ∫
             </div>
 
-            <div class="px-6 lg:px-16 w-full relative z-10">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12 w-full relative z-10">
                 <div class="max-w-4xl">
                     <p class="text-sm font-medium text-neutral-500 mb-6 tracking-wide uppercase">AI & Software Engineer</p>
                     <h1 class="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-neutral-900 leading-[1.1] mb-8">
@@ -165,7 +149,7 @@
                 ∑
             </div>
 
-            <div class="px-6 lg:px-16 w-full relative z-10">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12 w-full relative z-10">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
                     <div>
                         <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-8">Sobre Mim</h2>
@@ -225,7 +209,7 @@
 
         <!-- Projects Section -->
         <section id="projects" class="py-24 bg-neutral-50 relative">
-            <div class="px-6 lg:px-16 w-full">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12 w-full">
                 <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
                     <div>
                         <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4">Projetos Selecionados</h2>
@@ -293,7 +277,7 @@
 
         <!-- Contact Section -->
         <section id="contact" class="py-24 bg-white border-t border-neutral-100 relative z-10">
-            <div class="max-w-3xl mx-auto px-6 lg:px-16 text-center">
+            <div class="max-w-3xl mx-auto px-6 lg:px-12 text-center">
                 <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-6">Vamos Conversar?</h2>
                 <p class="text-xl text-neutral-600 mb-12">
                     Estou sempre aberto a discutir novos projetos, ideias de IA ou oportunidades de colaboração.
@@ -321,7 +305,7 @@
                     </div>
                 </form>
 
-                <div class="mt-16 flex justify-center space-x-8 md:hidden">
+                <div class="mt-16 flex justify-center space-x-8">
                     <a href="#" class="text-neutral-400 hover:text-neutral-900 transition-colors">
                         <span class="sr-only">GitHub</span>
                         <i data-lucide="github" class="h-6 w-6"></i>
