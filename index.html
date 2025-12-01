@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfólio | Engenheiro de IA</title>
+    <title>Portfólio | Retro Futuro AI</title>
     
     <!-- Link CSS -->
     <link rel="stylesheet" href="style.css">
@@ -18,23 +18,21 @@
             theme: {
                 extend: {
                     colors: {
-                        dark: {
-                            900: '#0f172a', // Slate 900
-                            800: '#1e293b', // Slate 800
-                            700: '#334155', // Slate 700
-                        },
-                        neon: {
-                            cyan: '#06b6d4', // Cyan 500
-                            purple: '#8b5cf6', // Violet 500
-                            pink: '#ec4899', // Pink 500
-                        },
+                        vapor: {
+                            bg: '#120024',     // Deep Purple
+                            pink: '#FF00FF',   // Hot Pink
+                            cyan: '#00FFFF',   // Electric Cyan
+                            orange: '#FF4500', // Sunset Orange
+                            dark: '#0a0015',   // Darker shade for cards
+                        }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['Fira Code', 'monospace'],
+                        sans: ['VT323', 'monospace'],     // Body text
+                        display: ['"Press Start 2P"', 'cursive'], // Headings
+                        cyber: ['Orbitron', 'sans-serif'], // Secondary headings
                     },
-                    animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    backgroundImage: {
+                        'vapor-gradient': 'linear-gradient(to right, #FF00FF, #00FFFF)',
                     }
                 }
             }
@@ -42,92 +40,85 @@
     </script>
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Particles.js -->
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 </head>
-<body class="bg-dark-900 text-gray-200 antialiased font-sans selection:bg-neon-cyan selection:text-dark-900 overflow-x-hidden">
+<body class="bg-vapor-bg text-vapor-cyan antialiased font-sans selection:bg-vapor-pink selection:text-white overflow-x-hidden">
 
-    <!-- Particles Background -->
-    <div id="particles-js" class="fixed inset-0 z-0 opacity-40 pointer-events-none"></div>
+    <!-- CRT Overlay (Scanlines & Vignette) -->
+    <div class="crt-overlay pointer-events-none fixed inset-0 z-[100]"></div>
+
+    <!-- Retro 3D Grid Background -->
+    <div class="retro-background fixed inset-0 z-0 pointer-events-none">
+        <div class="stars"></div>
+        <div class="sun"></div>
+        <div class="grid-3d"></div>
+    </div>
 
     <!-- Header / Navigation -->
-    <nav class="fixed w-full bg-dark-900/70 backdrop-blur-md border-b border-white/10 z-50 transition-all duration-300">
+    <nav class="fixed w-full bg-vapor-bg/80 backdrop-blur-sm border-b-2 border-vapor-pink z-50 transition-all duration-300 shadow-[0_0_15px_rgba(255,0,255,0.5)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
+            <div class="flex justify-between h-20 items-center">
                 <div class="flex-shrink-0 flex items-center">
-                    <span class="text-2xl font-bold font-mono tracking-tighter">
-                        <span class="text-neon-cyan">&lt;</span>
-                        <span class="text-white">Dev</span>
-                        <span class="text-neon-purple">.AI</span>
-                        <span class="text-neon-cyan">/&gt;</span>
+                    <span class="text-xl md:text-2xl font-display text-transparent bg-clip-text bg-gradient-to-r from-vapor-cyan to-vapor-pink drop-shadow-[2px_2px_0px_rgba(255,255,255,0.2)]">
+                        &lt;DEV.85/&gt;
                     </span>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-8">
-                        <a href="#home" class="text-gray-300 hover:text-neon-cyan px-3 py-2 rounded-md text-sm font-medium transition-all hover:shadow-[0_0_10px_rgba(6,182,212,0.5)]">Início</a>
-                        <a href="#about" class="text-gray-300 hover:text-neon-purple px-3 py-2 rounded-md text-sm font-medium transition-all hover:shadow-[0_0_10px_rgba(139,92,246,0.5)]">Sobre</a>
-                        <a href="#projects" class="text-gray-300 hover:text-neon-pink px-3 py-2 rounded-md text-sm font-medium transition-all hover:shadow-[0_0_10px_rgba(236,72,153,0.5)]">Projetos</a>
-                        <a href="#contact" class="px-4 py-2 rounded-md text-sm font-bold text-dark-900 bg-gradient-to-r from-neon-cyan to-neon-purple hover:from-neon-purple hover:to-neon-cyan transition-all transform hover:scale-105 shadow-lg shadow-neon-cyan/20">Contato</a>
+                        <a href="#home" class="text-xl text-vapor-cyan hover:text-vapor-pink hover:drop-shadow-[0_0_5px_#FF00FF] transition-all font-vt323 tracking-widest uppercase">Início</a>
+                        <a href="#about" class="text-xl text-vapor-cyan hover:text-vapor-pink hover:drop-shadow-[0_0_5px_#FF00FF] transition-all font-vt323 tracking-widest uppercase">Sobre</a>
+                        <a href="#projects" class="text-xl text-vapor-cyan hover:text-vapor-pink hover:drop-shadow-[0_0_5px_#FF00FF] transition-all font-vt323 tracking-widest uppercase">Projetos</a>
+                        <a href="#contact" class="px-4 py-2 border-2 border-vapor-cyan text-vapor-cyan font-display text-xs hover:bg-vapor-cyan hover:text-vapor-bg transition-all shadow-[0_0_10px_#00FFFF] hover:shadow-[0_0_20px_#00FFFF]">Contato</a>
                     </div>
                 </div>
                 <!-- Mobile menu button -->
                 <div class="-mr-2 flex md:hidden">
-                    <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none" aria-controls="mobile-menu" aria-expanded="false" id="mobile-menu-btn">
+                    <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-vapor-cyan hover:text-vapor-pink hover:bg-vapor-pink/10 focus:outline-none" aria-controls="mobile-menu" aria-expanded="false" id="mobile-menu-btn">
                         <span class="sr-only">Abrir menu</span>
-                        <i data-lucide="menu" class="h-6 w-6"></i>
+                        <i data-lucide="menu" class="h-8 w-8"></i>
                     </button>
                 </div>
             </div>
         </div>
         <!-- Mobile menu -->
-        <div class="md:hidden hidden bg-dark-800/95 backdrop-blur-xl border-b border-white/10" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-neon-cyan hover:bg-white/5">Início</a>
-                <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-neon-purple hover:bg-white/5">Sobre</a>
-                <a href="#projects" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-neon-pink hover:bg-white/5">Projetos</a>
-                <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-neon-cyan hover:bg-white/5">Contato</a>
+        <div class="md:hidden hidden bg-vapor-bg/95 border-b-2 border-vapor-pink" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
+                <a href="#home" class="block px-3 py-2 text-2xl font-vt323 text-vapor-cyan hover:text-vapor-pink uppercase">Início</a>
+                <a href="#about" class="block px-3 py-2 text-2xl font-vt323 text-vapor-cyan hover:text-vapor-pink uppercase">Sobre</a>
+                <a href="#projects" class="block px-3 py-2 text-2xl font-vt323 text-vapor-cyan hover:text-vapor-pink uppercase">Projetos</a>
+                <a href="#contact" class="block px-3 py-2 text-2xl font-vt323 text-vapor-cyan hover:text-vapor-pink uppercase">Contato</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-neon-purple/20 rounded-full blur-3xl filter opacity-50 animate-pulse-slow"></div>
-        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-neon-cyan/20 rounded-full blur-3xl filter opacity-50 animate-pulse-slow" style="animation-delay: 1.5s;"></div>
-
+    <section id="home" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden min-h-screen flex items-center justify-center">
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-neon-cyan font-mono text-sm sm:text-base mb-4 tracking-widest uppercase">Bem-vindo ao Futuro</h2>
-            <h1 class="text-5xl tracking-tight font-extrabold text-white sm:text-6xl md:text-7xl mb-6">
-                <span class="block">Eu construo</span>
-                <span class="block bg-clip-text text-transparent bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-pink">
-                    Inteligência Artificial
-                </span>
-            </h1>
+            <h2 class="text-vapor-orange font-display text-sm md:text-base mb-6 tracking-widest animate-pulse">SYSTEM_READY...</h2>
             
-            <div class="h-8 md:h-12 mb-8 flex justify-center items-center">
-                <span class="text-xl md:text-3xl text-gray-400 font-mono">
-                    Eu sou <span id="typewriter" class="text-white font-bold border-r-2 border-neon-cyan pr-1"></span>
+            <div class="glitch-wrapper mb-8">
+                <h1 class="glitch text-4xl md:text-6xl lg:text-7xl font-display text-white" data-text="EU CONSTRUO INTELIGÊNCIA ARTIFICIAL">
+                    EU CONSTRUO<br>INTELIGÊNCIA ARTIFICIAL
+                </h1>
+            </div>
+            
+            <div class="h-12 md:h-16 mb-10 flex justify-center items-center">
+                <span class="text-2xl md:text-4xl text-vapor-cyan font-vt323 uppercase tracking-wider bg-black/50 px-4 py-2 border border-vapor-cyan/30">
+                    > <span id="typewriter"></span><span class="cursor bg-vapor-pink"></span>
                 </span>
             </div>
 
-            <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-400 sm:text-xl md:max-w-3xl">
-                Transformando dados complexos em soluções elegantes. Especialista em Machine Learning, Deep Learning e Desenvolvimento Full-stack.
+            <p class="mt-4 max-w-2xl mx-auto text-xl md:text-2xl text-pink-200 font-vt323 shadow-black drop-shadow-md bg-vapor-bg/40 p-4 rounded border border-vapor-pink/20">
+                Hackeando o futuro com Machine Learning e vibe retrô. Transformo dados em pura nostalgia digital.
             </p>
             
-            <div class="mt-10 max-w-md mx-auto sm:flex sm:justify-center gap-4">
-                <div class="rounded-md shadow">
-                    <a href="#projects" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-bold rounded-lg text-dark-900 bg-neon-cyan hover:bg-cyan-400 md:py-4 md:text-lg md:px-10 transition-all hover:shadow-[0_0_20px_rgba(6,182,212,0.6)] transform hover:-translate-y-1">
-                        Ver Projetos <i data-lucide="arrow-right" class="ml-2 h-5 w-5"></i>
-                    </a>
-                </div>
-                <div class="mt-3 sm:mt-0">
-                    <a href="#contact" class="w-full flex items-center justify-center px-8 py-3 border border-white/20 text-base font-bold rounded-lg text-white bg-white/5 hover:bg-white/10 backdrop-blur-sm md:py-4 md:text-lg md:px-10 transition-all hover:border-neon-purple/50 hover:shadow-[0_0_15px_rgba(139,92,246,0.3)]">
-                        Fale Comigo
+            <div class="mt-12 max-w-md mx-auto sm:flex sm:justify-center gap-6">
+                <div class="rounded-none shadow-[4px_4px_0px_#00FFFF]">
+                    <a href="#projects" class="w-full flex items-center justify-center px-8 py-4 border-2 border-vapor-pink text-base font-display text-white bg-vapor-pink hover:bg-transparent hover:text-vapor-pink transition-all transform hover:-translate-y-1 hover:shadow-[0_0_15px_#FF00FF]">
+                        START GAME
                     </a>
                 </div>
             </div>
@@ -135,65 +126,57 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="relative py-20 bg-dark-800/50">
+    <section id="about" class="relative py-20 bg-vapor-dark/80 border-t-4 border-vapor-cyan">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="lg:text-center mb-16">
-                <h2 class="text-base text-neon-purple font-mono font-semibold tracking-wide uppercase">Sobre Mim</h2>
-                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl">
-                    A Mente por trás do Código
+                <h2 class="text-lg text-vapor-pink font-display tracking-widest uppercase drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">Player 1: Info</h2>
+                <p class="mt-4 text-3xl md:text-4xl leading-8 font-cyber font-bold text-white uppercase text-shadow-neon">
+                    Hardware & Software
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <!-- Retro Card -->
                 <div class="relative group">
-                    <div class="absolute -inset-1 bg-gradient-to-r from-neon-cyan to-neon-purple rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
-                    <div class="relative p-8 bg-dark-900 ring-1 ring-gray-900/5 rounded-lg leading-none flex items-top justify-start space-x-6">
-                        <div class="space-y-4 text-gray-300">
-                            <p class="text-lg">
-                                Olá! Sou um engenheiro apaixonado por explorar as fronteiras da IA. Minha jornada começou com curiosidade sobre como as máquinas aprendem e evoluiu para a construção de sistemas complexos que resolvem problemas reais.
-                            </p>
-                            <p class="text-lg">
-                                Quando não estou treinando modelos neurais, estou contribuindo para projetos open-source ou explorando novas tecnologias de visualização de dados.
-                            </p>
-                        </div>
+                    <div class="absolute -inset-2 bg-gradient-to-r from-vapor-cyan to-vapor-pink rounded-none opacity-70 blur-sm group-hover:opacity-100 transition duration-200"></div>
+                    <div class="relative p-8 bg-vapor-bg border-2 border-white/20 flex flex-col space-y-4">
+                        <div class="absolute top-0 right-0 p-2 text-xs font-mono text-vapor-cyan bg-vapor-dark border-l border-b border-vapor-cyan">SYS.INFO</div>
+                        <p class="text-xl md:text-2xl font-vt323 text-gray-300 leading-relaxed">
+                            Inserido no mundo da tecnologia com a curiosidade de um explorador de 8-bits. Minha missão é programar redes neurais que sonham com ovelhas elétricas.
+                        </p>
+                        <p class="text-xl md:text-2xl font-vt323 text-gray-300 leading-relaxed">
+                            De Computer Vision a LLMs, eu navego no ciberespaço construindo soluções que parecem ficção científica.
+                        </p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <!-- Skill Card 1 -->
-                    <div class="p-6 bg-dark-900/80 backdrop-blur border border-white/5 rounded-xl hover:border-neon-cyan/50 transition-colors group">
-                        <div class="w-12 h-12 rounded-lg bg-neon-cyan/10 flex items-center justify-center mb-4 group-hover:bg-neon-cyan/20 transition-colors">
-                            <i data-lucide="brain-circuit" class="h-6 w-6 text-neon-cyan"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Machine Learning</h3>
-                        <p class="text-sm text-gray-400">PyTorch, TensorFlow, Scikit-learn, Computer Vision.</p>
+                    <div class="p-6 bg-vapor-bg border-2 border-vapor-cyan hover:bg-vapor-cyan/10 transition-colors group shadow-[4px_4px_0px_#00FFFF]">
+                        <i data-lucide="brain-circuit" class="h-10 w-10 text-vapor-pink mb-4"></i>
+                        <h3 class="text-sm font-display text-white mb-2 uppercase">Machine Learning</h3>
+                        <p class="text-lg font-vt323 text-vapor-cyan">PyTorch, TensorFlow, Scikit-learn</p>
                     </div>
 
                     <!-- Skill Card 2 -->
-                    <div class="p-6 bg-dark-900/80 backdrop-blur border border-white/5 rounded-xl hover:border-neon-purple/50 transition-colors group">
-                        <div class="w-12 h-12 rounded-lg bg-neon-purple/10 flex items-center justify-center mb-4 group-hover:bg-neon-purple/20 transition-colors">
-                            <i data-lucide="database" class="h-6 w-6 text-neon-purple"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Data Science</h3>
-                        <p class="text-sm text-gray-400">Pandas, NumPy, SQL, Data Visualization, Big Data.</p>
+                    <div class="p-6 bg-vapor-bg border-2 border-vapor-pink hover:bg-vapor-pink/10 transition-colors group shadow-[4px_4px_0px_#FF00FF]">
+                        <i data-lucide="database" class="h-10 w-10 text-vapor-cyan mb-4"></i>
+                        <h3 class="text-sm font-display text-white mb-2 uppercase">Data Science</h3>
+                        <p class="text-lg font-vt323 text-vapor-pink">Pandas, SQL, Big Data Viz</p>
                     </div>
 
                     <!-- Skill Card 3 -->
-                    <div class="p-6 bg-dark-900/80 backdrop-blur border border-white/5 rounded-xl hover:border-neon-pink/50 transition-colors group">
-                        <div class="w-12 h-12 rounded-lg bg-neon-pink/10 flex items-center justify-center mb-4 group-hover:bg-neon-pink/20 transition-colors">
-                            <i data-lucide="code-2" class="h-6 w-6 text-neon-pink"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Full Stack</h3>
-                        <p class="text-sm text-gray-400">React, Node.js, FastAPI, Docker, Cloud (AWS/GCP).</p>
+                    <div class="p-6 bg-vapor-bg border-2 border-vapor-orange hover:bg-vapor-orange/10 transition-colors group shadow-[4px_4px_0px_#FF4500]">
+                        <i data-lucide="code-2" class="h-10 w-10 text-vapor-orange mb-4"></i>
+                        <h3 class="text-sm font-display text-white mb-2 uppercase">Full Stack</h3>
+                        <p class="text-lg font-vt323 text-vapor-orange">React, FastAPI, Docker</p>
                     </div>
 
                      <!-- Skill Card 4 -->
-                     <div class="p-6 bg-dark-900/80 backdrop-blur border border-white/5 rounded-xl hover:border-white/30 transition-colors group">
-                        <div class="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center mb-4 group-hover:bg-white/20 transition-colors">
-                            <i data-lucide="cpu" class="h-6 w-6 text-white"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Engenharia</h3>
-                        <p class="text-sm text-gray-400">MLOps, CI/CD, Arquitetura de Software, Algoritmos.</p>
+                     <div class="p-6 bg-vapor-bg border-2 border-white hover:bg-white/10 transition-colors group shadow-[4px_4px_0px_#FFFFFF]">
+                        <i data-lucide="cpu" class="h-10 w-10 text-white mb-4"></i>
+                        <h3 class="text-sm font-display text-white mb-2 uppercase">Engenharia</h3>
+                        <p class="text-lg font-vt323 text-gray-300">MLOps, CI/CD, Algoritmos</p>
                     </div>
                 </div>
             </div>
@@ -201,92 +184,69 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="py-20 bg-dark-900 relative">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-neon-purple/5 rounded-full blur-[100px] pointer-events-none"></div>
-
+    <section id="projects" class="py-20 bg-vapor-bg relative border-t-4 border-vapor-pink">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-16">
-                <h2 class="text-base text-neon-pink font-mono font-semibold tracking-wide uppercase">Portfólio</h2>
-                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl">
-                    Projetos em Destaque
-                </p>
-                <p class="mt-4 max-w-2xl text-xl text-gray-400 mx-auto">
-                    Aplicações inovadoras onde a IA encontra o mundo real.
+                <h2 class="text-lg text-vapor-cyan font-display tracking-widest uppercase drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">Select Mission</h2>
+                <p class="mt-4 text-3xl md:text-4xl leading-8 font-cyber font-bold text-white uppercase text-shadow-neon">
+                    Projetos Realizados
                 </p>
             </div>
 
-            <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
                 <!-- Project 1 -->
-                <div class="group rounded-xl overflow-hidden bg-dark-800 border border-white/5 hover:border-neon-cyan/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.2)]">
-                    <div class="relative overflow-hidden h-48">
-                        <div class="absolute inset-0 bg-gradient-to-t from-dark-900 to-transparent opacity-60 z-10"></div>
-                        <img class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="AI Project">
-                        <div class="absolute top-4 right-4 z-20">
-                            <a href="#" class="p-2 bg-dark-900/80 backdrop-blur rounded-full text-white hover:text-neon-cyan transition-colors">
-                                <i data-lucide="github" class="h-5 w-5"></i>
-                            </a>
-                        </div>
+                <div class="group border-4 border-vapor-dark bg-vapor-dark transform hover:scale-105 transition-transform duration-300">
+                    <div class="relative h-48 border-b-4 border-vapor-cyan overflow-hidden">
+                        <div class="absolute inset-0 bg-vapor-pink/20 z-10 group-hover:bg-transparent transition-all"></div>
+                        <img class="w-full h-full object-cover filter contrast-125 grayscale group-hover:grayscale-0 transition-all" src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="AI Project">
                     </div>
-                    <div class="p-6">
-                        <p class="text-xs font-mono text-neon-cyan mb-2">Computer Vision</p>
-                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors">NeuroVision Detecção</h3>
-                        <p class="text-sm text-gray-400 mb-4">
-                            Sistema de detecção de objetos em tempo real utilizando YOLOv8 otimizado para edge devices com alta precisão.
+                    <div class="p-6 relative">
+                        <div class="absolute -top-6 right-4 bg-vapor-cyan text-vapor-bg font-display text-xs px-2 py-1 border-2 border-white">LEVEL 1</div>
+                        <h3 class="text-xl font-display text-vapor-pink mb-2 uppercase">NeuroVision</h3>
+                        <p class="text-lg font-vt323 text-white mb-4 leading-tight">
+                            Detecção de objetos em tempo real. Uma visão cibernética para máquinas.
                         </p>
                         <div class="flex flex-wrap gap-2">
-                            <span class="px-2 py-1 text-xs rounded bg-white/5 text-gray-300 border border-white/10">Python</span>
-                            <span class="px-2 py-1 text-xs rounded bg-white/5 text-gray-300 border border-white/10">OpenCV</span>
-                            <span class="px-2 py-1 text-xs rounded bg-white/5 text-gray-300 border border-white/10">PyTorch</span>
+                            <span class="px-2 py-1 text-sm font-vt323 bg-vapor-bg border border-vapor-cyan text-vapor-cyan">PYTHON</span>
+                            <span class="px-2 py-1 text-sm font-vt323 bg-vapor-bg border border-vapor-cyan text-vapor-cyan">YOLO</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Project 2 -->
-                <div class="group rounded-xl overflow-hidden bg-dark-800 border border-white/5 hover:border-neon-purple/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(139,92,246,0.2)]">
-                    <div class="relative overflow-hidden h-48">
-                        <div class="absolute inset-0 bg-gradient-to-t from-dark-900 to-transparent opacity-60 z-10"></div>
-                        <img class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" src="https://images.unsplash.com/photo-1518932945647-7a1c969f8be1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Data Project">
-                        <div class="absolute top-4 right-4 z-20">
-                            <a href="#" class="p-2 bg-dark-900/80 backdrop-blur rounded-full text-white hover:text-neon-purple transition-colors">
-                                <i data-lucide="github" class="h-5 w-5"></i>
-                            </a>
-                        </div>
+                <div class="group border-4 border-vapor-dark bg-vapor-dark transform hover:scale-105 transition-transform duration-300">
+                    <div class="relative h-48 border-b-4 border-vapor-pink overflow-hidden">
+                         <div class="absolute inset-0 bg-vapor-cyan/20 z-10 group-hover:bg-transparent transition-all"></div>
+                        <img class="w-full h-full object-cover filter contrast-125 grayscale group-hover:grayscale-0 transition-all" src="https://images.unsplash.com/photo-1518932945647-7a1c969f8be1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Data Project">
                     </div>
-                    <div class="p-6">
-                        <p class="text-xs font-mono text-neon-purple mb-2">NLP & LLMs</p>
-                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-neon-purple transition-colors">ChatBot Jurídico</h3>
-                        <p class="text-sm text-gray-400 mb-4">
-                            Assistente virtual treinado em corpus jurídico brasileiro, capaz de resumir processos e sugerir jurisprudência.
+                    <div class="p-6 relative">
+                         <div class="absolute -top-6 right-4 bg-vapor-pink text-white font-display text-xs px-2 py-1 border-2 border-white">LEVEL 2</div>
+                        <h3 class="text-xl font-display text-vapor-cyan mb-2 uppercase">Legal.Bot</h3>
+                        <p class="text-lg font-vt323 text-white mb-4 leading-tight">
+                            Assistente jurídico powered by LLMs. O futuro da lei é binário.
                         </p>
                         <div class="flex flex-wrap gap-2">
-                            <span class="px-2 py-1 text-xs rounded bg-white/5 text-gray-300 border border-white/10">LangChain</span>
-                            <span class="px-2 py-1 text-xs rounded bg-white/5 text-gray-300 border border-white/10">OpenAI API</span>
-                            <span class="px-2 py-1 text-xs rounded bg-white/5 text-gray-300 border border-white/10">FastAPI</span>
+                            <span class="px-2 py-1 text-sm font-vt323 bg-vapor-bg border border-vapor-pink text-vapor-pink">OPENAI</span>
+                            <span class="px-2 py-1 text-sm font-vt323 bg-vapor-bg border border-vapor-pink text-vapor-pink">LANGCHAIN</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Project 3 -->
-                <div class="group rounded-xl overflow-hidden bg-dark-800 border border-white/5 hover:border-neon-pink/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(236,72,153,0.2)]">
-                    <div class="relative overflow-hidden h-48">
-                        <div class="absolute inset-0 bg-gradient-to-t from-dark-900 to-transparent opacity-60 z-10"></div>
-                        <img class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Dashboard">
-                        <div class="absolute top-4 right-4 z-20">
-                            <a href="#" class="p-2 bg-dark-900/80 backdrop-blur rounded-full text-white hover:text-neon-pink transition-colors">
-                                <i data-lucide="github" class="h-5 w-5"></i>
-                            </a>
-                        </div>
+                <div class="group border-4 border-vapor-dark bg-vapor-dark transform hover:scale-105 transition-transform duration-300">
+                    <div class="relative h-48 border-b-4 border-vapor-orange overflow-hidden">
+                         <div class="absolute inset-0 bg-vapor-orange/20 z-10 group-hover:bg-transparent transition-all"></div>
+                        <img class="w-full h-full object-cover filter contrast-125 grayscale group-hover:grayscale-0 transition-all" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Dashboard">
                     </div>
-                    <div class="p-6">
-                        <p class="text-xs font-mono text-neon-pink mb-2">Analytics</p>
-                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-neon-pink transition-colors">Predictive Finance</h3>
-                        <p class="text-sm text-gray-400 mb-4">
-                            Dashboard de previsão financeira utilizando séries temporais para identificar tendências de mercado.
+                    <div class="p-6 relative">
+                         <div class="absolute -top-6 right-4 bg-vapor-orange text-vapor-bg font-display text-xs px-2 py-1 border-2 border-white">LEVEL 3</div>
+                        <h3 class="text-xl font-display text-vapor-orange mb-2 uppercase">Future.Finance</h3>
+                        <p class="text-lg font-vt323 text-white mb-4 leading-tight">
+                            Previsão de mercado com séries temporais. Vendo o futuro antes dele acontecer.
                         </p>
                         <div class="flex flex-wrap gap-2">
-                            <span class="px-2 py-1 text-xs rounded bg-white/5 text-gray-300 border border-white/10">Streamlit</span>
-                            <span class="px-2 py-1 text-xs rounded bg-white/5 text-gray-300 border border-white/10">Prophet</span>
-                            <span class="px-2 py-1 text-xs rounded bg-white/5 text-gray-300 border border-white/10">Pandas</span>
+                            <span class="px-2 py-1 text-sm font-vt323 bg-vapor-bg border border-vapor-orange text-vapor-orange">PROPHET</span>
+                            <span class="px-2 py-1 text-sm font-vt323 bg-vapor-bg border border-vapor-orange text-vapor-orange">STREAMLIT</span>
                         </div>
                     </div>
                 </div>
@@ -295,93 +255,65 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-gradient-to-b from-dark-900 to-dark-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-lg mx-auto md:max-w-none md:grid md:grid-cols-2 md:gap-16">
-                <div>
-                    <h2 class="text-3xl font-extrabold text-white sm:text-4xl mb-6">
-                        Vamos construir o <span class="text-neon-cyan">futuro</span> juntos?
-                    </h2>
-                    <p class="text-lg text-gray-400 mb-8">
-                        Estou sempre aberto a novos desafios e colaborações. Se você tem um projeto em mente ou apenas quer trocar ideias sobre IA, entre em contato.
-                    </p>
-                    <div class="space-y-6">
-                        <div class="flex items-center group">
-                            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-dark-700 flex items-center justify-center group-hover:bg-neon-cyan/20 transition-colors">
-                                <i data-lucide="mail" class="h-6 w-6 text-neon-cyan"></i>
-                            </div>
-                            <div class="ml-4 text-base text-gray-300">
-                                <p class="font-medium text-white">Email</p>
-                                <a href="mailto:contato@dev.ai" class="hover:text-neon-cyan transition-colors">contato@dev.ai</a>
-                            </div>
-                        </div>
-                        <div class="flex items-center group">
-                            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-dark-700 flex items-center justify-center group-hover:bg-neon-purple/20 transition-colors">
-                                <i data-lucide="map-pin" class="h-6 w-6 text-neon-purple"></i>
-                            </div>
-                            <div class="ml-4 text-base text-gray-300">
-                                <p class="font-medium text-white">Localização</p>
-                                <p>São Paulo, SP - Brasil</p>
-                            </div>
-                        </div>
+    <section id="contact" class="py-20 bg-vapor-dark border-t-4 border-vapor-orange relative overflow-hidden">
+        <!-- Decoration Grid -->
+        <div class="absolute inset-0 opacity-10 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl mx-auto text-center mb-12">
+                <h2 class="text-3xl font-display text-white mb-6 uppercase drop-shadow-[4px_4px_0px_#FF00FF]">
+                    Insert Coin to <span class="text-vapor-cyan">Connect</span>
+                </h2>
+                <p class="text-2xl font-vt323 text-vapor-pink mb-8">
+                    Tem uma ideia radical? Vamos conversar.
+                </p>
+            </div>
+            
+            <div class="max-w-xl mx-auto bg-vapor-bg p-8 border-4 border-white shadow-[8px_8px_0px_#00FFFF]">
+                <form action="#" method="POST" class="grid grid-cols-1 gap-y-6">
+                    <div>
+                        <label for="name" class="block text-xl font-vt323 text-vapor-cyan uppercase mb-1">Nome do Jogador</label>
+                        <input type="text" name="name" id="name" class="block w-full bg-vapor-dark border-2 border-vapor-pink p-3 text-white font-mono focus:outline-none focus:shadow-[0_0_15px_#FF00FF] transition-all" placeholder="INSIRA SEU NOME">
                     </div>
-                    
-                    <div class="mt-12 flex space-x-6">
-                        <a href="#" class="text-gray-400 hover:text-white hover:scale-110 transition-all">
-                            <i data-lucide="github" class="h-8 w-8"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-[#0077b5] hover:scale-110 transition-all">
-                            <i data-lucide="linkedin" class="h-8 w-8"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-neon-cyan hover:scale-110 transition-all">
-                            <i data-lucide="twitter" class="h-8 w-8"></i>
-                        </a>
+                    <div>
+                        <label for="email" class="block text-xl font-vt323 text-vapor-cyan uppercase mb-1">Email de Contato</label>
+                        <input type="email" name="email" id="email" class="block w-full bg-vapor-dark border-2 border-vapor-pink p-3 text-white font-mono focus:outline-none focus:shadow-[0_0_15px_#FF00FF] transition-all" placeholder="USER@NET.COM">
                     </div>
-                </div>
-                
-                <div class="mt-12 md:mt-0 bg-dark-800/50 backdrop-blur p-8 rounded-2xl border border-white/5 shadow-2xl">
-                    <form action="#" method="POST" class="grid grid-cols-1 gap-y-6">
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-gray-300">Nome</label>
-                            <div class="mt-1">
-                                <input type="text" name="name" id="name" class="py-3 px-4 block w-full bg-dark-900 border-dark-700 rounded-lg text-white placeholder-gray-500 focus:ring-neon-cyan focus:border-neon-cyan transition-colors" placeholder="Seu nome">
-                            </div>
-                        </div>
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
-                            <div class="mt-1">
-                                <input type="email" name="email" id="email" class="py-3 px-4 block w-full bg-dark-900 border-dark-700 rounded-lg text-white placeholder-gray-500 focus:ring-neon-cyan focus:border-neon-cyan transition-colors" placeholder="seu@email.com">
-                            </div>
-                        </div>
-                        <div>
-                            <label for="message" class="block text-sm font-medium text-gray-300">Mensagem</label>
-                            <div class="mt-1">
-                                <textarea id="message" name="message" rows="4" class="py-3 px-4 block w-full bg-dark-900 border-dark-700 rounded-lg text-white placeholder-gray-500 focus:ring-neon-cyan focus:border-neon-cyan transition-colors" placeholder="Descreva seu projeto..."></textarea>
-                            </div>
-                        </div>
-                        <div>
-                            <button type="submit" class="w-full inline-flex justify-center py-4 px-6 border border-transparent shadow-sm text-base font-bold rounded-lg text-dark-900 bg-gradient-to-r from-neon-cyan to-neon-purple hover:from-neon-purple hover:to-neon-cyan focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neon-cyan transition-all transform hover:-translate-y-1">
-                                Enviar Mensagem
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                    <div>
+                        <label for="message" class="block text-xl font-vt323 text-vapor-cyan uppercase mb-1">Mensagem</label>
+                        <textarea id="message" name="message" rows="4" class="block w-full bg-vapor-dark border-2 border-vapor-pink p-3 text-white font-mono focus:outline-none focus:shadow-[0_0_15px_#FF00FF] transition-all" placeholder="DIGITE SUA MENSAGEM..."></textarea>
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full py-4 px-6 border-2 border-white text-lg font-display text-vapor-bg bg-gradient-to-r from-vapor-cyan to-vapor-pink hover:from-vapor-pink hover:to-vapor-cyan transition-all uppercase tracking-widest shadow-[4px_4px_0px_#FFFFFF] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
+                            Enviar Dados
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="mt-16 flex justify-center space-x-12">
+                <a href="#" class="text-vapor-cyan hover:text-white hover:scale-125 transition-transform duration-300 hover:drop-shadow-[0_0_10px_#00FFFF]">
+                    <i data-lucide="github" class="h-10 w-10"></i>
+                </a>
+                <a href="#" class="text-vapor-pink hover:text-white hover:scale-125 transition-transform duration-300 hover:drop-shadow-[0_0_10px_#FF00FF]">
+                    <i data-lucide="linkedin" class="h-10 w-10"></i>
+                </a>
+                <a href="#" class="text-vapor-orange hover:text-white hover:scale-125 transition-transform duration-300 hover:drop-shadow-[0_0_10px_#FF4500]">
+                    <i data-lucide="twitter" class="h-10 w-10"></i>
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-dark-900 border-t border-white/10">
-        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-4 md:mb-0">
-                <span class="text-xl font-bold font-mono text-gray-300">
-                    &lt;Dev.AI/&gt;
-                </span>
-                <p class="mt-2 text-sm text-gray-500">© 2023 Todos os direitos reservados.</p>
-            </div>
-            <div class="text-sm text-gray-500">
-                Feito com <i data-lucide="heart" class="inline-block h-4 w-4 text-red-500"></i> e Inteligência Artificial
-            </div>
+    <footer class="bg-vapor-bg border-t-2 border-vapor-pink/50">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <span class="text-lg font-display text-transparent bg-clip-text bg-gradient-to-r from-vapor-cyan to-vapor-pink">
+                &copy; 1985-2023 DEV.85
+            </span>
+            <p class="mt-2 text-sm text-gray-500 font-vt323 text-xl">
+                FEITO COM <i data-lucide="joystick" class="inline-block h-4 w-4 text-vapor-orange"></i> E NOSTALGIA
+            </p>
         </div>
     </footer>
 
