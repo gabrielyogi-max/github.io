@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfólio | Retro Futuro AI</title>
+    <title>Portfólio | AI Engineer</title>
     
     <!-- Link CSS -->
     <link rel="stylesheet" href="style.css">
@@ -14,25 +14,20 @@
     <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
-                    colors: {
-                        vapor: {
-                            bg: '#120024',     // Deep Purple
-                            pink: '#FF00FF',   // Hot Pink
-                            cyan: '#00FFFF',   // Electric Cyan
-                            orange: '#FF4500', // Sunset Orange
-                            dark: '#0a0015',   // Darker shade for cards
-                        }
-                    },
                     fontFamily: {
-                        sans: ['VT323', 'monospace'],     // Body text
-                        display: ['"Press Start 2P"', 'cursive'], // Headings
-                        cyber: ['Orbitron', 'sans-serif'], // Secondary headings
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
                     },
-                    backgroundImage: {
-                        'vapor-gradient': 'linear-gradient(to right, #FF00FF, #00FFFF)',
+                    colors: {
+                        neutral: {
+                            50: '#fafafa',
+                            100: '#f5f5f5',
+                            200: '#e5e5e5',
+                            800: '#262626',
+                            900: '#171717',
+                        }
                     }
                 }
             }
@@ -40,85 +35,72 @@
     </script>
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-vapor-bg text-vapor-cyan antialiased font-sans selection:bg-vapor-pink selection:text-white overflow-x-hidden">
-
-    <!-- CRT Overlay (Scanlines & Vignette) -->
-    <div class="crt-overlay pointer-events-none fixed inset-0 z-[100]"></div>
-
-    <!-- Retro 3D Grid Background -->
-    <div class="retro-background fixed inset-0 z-0 pointer-events-none">
-        <div class="stars"></div>
-        <div class="sun"></div>
-        <div class="grid-3d"></div>
-    </div>
+<body class="bg-neutral-50 text-neutral-900 antialiased font-sans selection:bg-neutral-900 selection:text-white">
 
     <!-- Header / Navigation -->
-    <nav class="fixed w-full bg-vapor-bg/80 backdrop-blur-sm border-b-2 border-vapor-pink z-50 transition-all duration-300 shadow-[0_0_15px_rgba(255,0,255,0.5)]">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav class="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-neutral-100 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
                 <div class="flex-shrink-0 flex items-center">
-                    <span class="text-xl md:text-2xl font-display text-transparent bg-clip-text bg-gradient-to-r from-vapor-cyan to-vapor-pink drop-shadow-[2px_2px_0px_rgba(255,255,255,0.2)]">
-                        &lt;DEV.85/&gt;
+                    <span class="text-xl font-display font-bold tracking-tight text-neutral-900">
+                        DEV.AI
                     </span>
                 </div>
                 <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-8">
-                        <a href="#home" class="text-xl text-vapor-cyan hover:text-vapor-pink hover:drop-shadow-[0_0_5px_#FF00FF] transition-all font-vt323 tracking-widest uppercase">Início</a>
-                        <a href="#about" class="text-xl text-vapor-cyan hover:text-vapor-pink hover:drop-shadow-[0_0_5px_#FF00FF] transition-all font-vt323 tracking-widest uppercase">Sobre</a>
-                        <a href="#projects" class="text-xl text-vapor-cyan hover:text-vapor-pink hover:drop-shadow-[0_0_5px_#FF00FF] transition-all font-vt323 tracking-widest uppercase">Projetos</a>
-                        <a href="#contact" class="px-4 py-2 border-2 border-vapor-cyan text-vapor-cyan font-display text-xs hover:bg-vapor-cyan hover:text-vapor-bg transition-all shadow-[0_0_10px_#00FFFF] hover:shadow-[0_0_20px_#00FFFF]">Contato</a>
+                    <div class="ml-10 flex items-baseline space-x-10">
+                        <a href="#home" class="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">Início</a>
+                        <a href="#about" class="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">Sobre</a>
+                        <a href="#projects" class="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">Projetos</a>
+                        <a href="#contact" class="px-5 py-2.5 rounded-full bg-neutral-900 text-white text-sm font-medium hover:bg-neutral-800 transition-all shadow-sm hover:shadow-md">Contato</a>
                     </div>
                 </div>
                 <!-- Mobile menu button -->
                 <div class="-mr-2 flex md:hidden">
-                    <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-vapor-cyan hover:text-vapor-pink hover:bg-vapor-pink/10 focus:outline-none" aria-controls="mobile-menu" aria-expanded="false" id="mobile-menu-btn">
-                        <span class="sr-only">Abrir menu</span>
-                        <i data-lucide="menu" class="h-8 w-8"></i>
+                    <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-neutral-900 hover:bg-neutral-100 focus:outline-none" id="mobile-menu-btn">
+                        <i data-lucide="menu" class="h-6 w-6"></i>
                     </button>
                 </div>
             </div>
         </div>
         <!-- Mobile menu -->
-        <div class="md:hidden hidden bg-vapor-bg/95 border-b-2 border-vapor-pink" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
-                <a href="#home" class="block px-3 py-2 text-2xl font-vt323 text-vapor-cyan hover:text-vapor-pink uppercase">Início</a>
-                <a href="#about" class="block px-3 py-2 text-2xl font-vt323 text-vapor-cyan hover:text-vapor-pink uppercase">Sobre</a>
-                <a href="#projects" class="block px-3 py-2 text-2xl font-vt323 text-vapor-cyan hover:text-vapor-pink uppercase">Projetos</a>
-                <a href="#contact" class="block px-3 py-2 text-2xl font-vt323 text-vapor-cyan hover:text-vapor-pink uppercase">Contato</a>
+        <div class="md:hidden hidden bg-white border-b border-neutral-100" id="mobile-menu">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#home" class="block px-3 py-2 text-lg font-display font-medium text-neutral-900">Início</a>
+                <a href="#about" class="block px-3 py-2 text-lg font-display font-medium text-neutral-900">Sobre</a>
+                <a href="#projects" class="block px-3 py-2 text-lg font-display font-medium text-neutral-900">Projetos</a>
+                <a href="#contact" class="block px-3 py-2 text-lg font-display font-medium text-neutral-900">Contato</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden min-h-screen flex items-center justify-center">
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-vapor-orange font-display text-sm md:text-base mb-6 tracking-widest animate-pulse">SYSTEM_READY...</h2>
-            
-            <div class="glitch-wrapper mb-8">
-                <h1 class="glitch text-4xl md:text-6xl lg:text-7xl font-display text-white" data-text="EU CONSTRUO INTELIGÊNCIA ARTIFICIAL">
-                    EU CONSTRUO<br>INTELIGÊNCIA ARTIFICIAL
+    <section id="home" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 flex items-center min-h-[90vh]">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="max-w-4xl">
+                <p class="text-sm font-medium text-neutral-500 mb-6 tracking-wide uppercase">AI & Software Engineer</p>
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-neutral-900 leading-[1.1] mb-8">
+                    Eu construo <br>
+                    <span class="text-neutral-400">Inteligência Artificial.</span>
                 </h1>
-            </div>
-            
-            <div class="h-12 md:h-16 mb-10 flex justify-center items-center">
-                <span class="text-2xl md:text-4xl text-vapor-cyan font-vt323 uppercase tracking-wider bg-black/50 px-4 py-2 border border-vapor-cyan/30">
-                    > <span id="typewriter"></span><span class="cursor bg-vapor-pink"></span>
-                </span>
-            </div>
-
-            <p class="mt-4 max-w-2xl mx-auto text-xl md:text-2xl text-pink-200 font-vt323 shadow-black drop-shadow-md bg-vapor-bg/40 p-4 rounded border border-vapor-pink/20">
-                Hackeando o futuro com Machine Learning e vibe retrô. Transformo dados em pura nostalgia digital.
-            </p>
-            
-            <div class="mt-12 max-w-md mx-auto sm:flex sm:justify-center gap-6">
-                <div class="rounded-none shadow-[4px_4px_0px_#00FFFF]">
-                    <a href="#projects" class="w-full flex items-center justify-center px-8 py-4 border-2 border-vapor-pink text-base font-display text-white bg-vapor-pink hover:bg-transparent hover:text-vapor-pink transition-all transform hover:-translate-y-1 hover:shadow-[0_0_15px_#FF00FF]">
-                        START GAME
+                
+                <p class="text-xl md:text-2xl text-neutral-600 font-light max-w-2xl leading-relaxed mb-12">
+                    Transformando dados complexos em soluções elegantes. Especialista em Machine Learning e desenvolvimento full-stack escalável.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-6">
+                    <a href="#projects" class="inline-flex items-center justify-center px-8 py-4 rounded-full bg-neutral-900 text-white text-base font-medium hover:bg-neutral-800 transition-all hover:-translate-y-1">
+                        Ver Projetos
+                        <i data-lucide="arrow-right" class="ml-2 h-4 w-4"></i>
+                    </a>
+                    <a href="#contact" class="inline-flex items-center justify-center px-8 py-4 rounded-full border border-neutral-200 text-neutral-900 text-base font-medium hover:border-neutral-900 transition-colors">
+                        Fale Comigo
                     </a>
                 </div>
             </div>
@@ -126,57 +108,59 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="relative py-20 bg-vapor-dark/80 border-t-4 border-vapor-cyan">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="lg:text-center mb-16">
-                <h2 class="text-lg text-vapor-pink font-display tracking-widest uppercase drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">Player 1: Info</h2>
-                <p class="mt-4 text-3xl md:text-4xl leading-8 font-cyber font-bold text-white uppercase text-shadow-neon">
-                    Hardware & Software
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <!-- Retro Card -->
-                <div class="relative group">
-                    <div class="absolute -inset-2 bg-gradient-to-r from-vapor-cyan to-vapor-pink rounded-none opacity-70 blur-sm group-hover:opacity-100 transition duration-200"></div>
-                    <div class="relative p-8 bg-vapor-bg border-2 border-white/20 flex flex-col space-y-4">
-                        <div class="absolute top-0 right-0 p-2 text-xs font-mono text-vapor-cyan bg-vapor-dark border-l border-b border-vapor-cyan">SYS.INFO</div>
-                        <p class="text-xl md:text-2xl font-vt323 text-gray-300 leading-relaxed">
-                            Inserido no mundo da tecnologia com a curiosidade de um explorador de 8-bits. Minha missão é programar redes neurais que sonham com ovelhas elétricas.
+    <section id="about" class="py-24 bg-white border-y border-neutral-100">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-8">Sobre Mim</h2>
+                    <div class="prose prose-lg text-neutral-600">
+                        <p class="mb-6">
+                            Combinando rigor acadêmico com pragmatismo de engenharia. Minha abordagem para o desenvolvimento de IA é centrada na clareza, eficiência e impacto real.
                         </p>
-                        <p class="text-xl md:text-2xl font-vt323 text-gray-300 leading-relaxed">
-                            De Computer Vision a LLMs, eu navego no ciberespaço construindo soluções que parecem ficção científica.
+                        <p>
+                            De Computer Vision a Large Language Models (LLMs), eu crio sistemas que não apenas "funcionam", mas escalam e entregam valor tangível.
                         </p>
+                    </div>
+                    
+                    <div class="mt-12 pt-8 border-t border-neutral-100 grid grid-cols-2 gap-8">
+                        <div>
+                            <span class="block text-4xl font-display font-bold text-neutral-900 mb-1">3+</span>
+                            <span class="text-sm text-neutral-500 uppercase tracking-wide">Anos de Experiência</span>
+                        </div>
+                        <div>
+                            <span class="block text-4xl font-display font-bold text-neutral-900 mb-1">20+</span>
+                            <span class="text-sm text-neutral-500 uppercase tracking-wide">Projetos Entregues</span>
+                        </div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <!-- Skill Card 1 -->
-                    <div class="p-6 bg-vapor-bg border-2 border-vapor-cyan hover:bg-vapor-cyan/10 transition-colors group shadow-[4px_4px_0px_#00FFFF]">
-                        <i data-lucide="brain-circuit" class="h-10 w-10 text-vapor-pink mb-4"></i>
-                        <h3 class="text-sm font-display text-white mb-2 uppercase">Machine Learning</h3>
-                        <p class="text-lg font-vt323 text-vapor-cyan">PyTorch, TensorFlow, Scikit-learn</p>
+                    <div class="p-8 rounded-2xl bg-neutral-50 hover:bg-neutral-100 transition-colors">
+                        <i data-lucide="brain-circuit" class="h-8 w-8 text-neutral-900 mb-6"></i>
+                        <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Machine Learning</h3>
+                        <p class="text-sm text-neutral-600">PyTorch, TensorFlow, Scikit-learn, HuggingFace</p>
                     </div>
 
                     <!-- Skill Card 2 -->
-                    <div class="p-6 bg-vapor-bg border-2 border-vapor-pink hover:bg-vapor-pink/10 transition-colors group shadow-[4px_4px_0px_#FF00FF]">
-                        <i data-lucide="database" class="h-10 w-10 text-vapor-cyan mb-4"></i>
-                        <h3 class="text-sm font-display text-white mb-2 uppercase">Data Science</h3>
-                        <p class="text-lg font-vt323 text-vapor-pink">Pandas, SQL, Big Data Viz</p>
+                    <div class="p-8 rounded-2xl bg-neutral-50 hover:bg-neutral-100 transition-colors">
+                        <i data-lucide="database" class="h-8 w-8 text-neutral-900 mb-6"></i>
+                        <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Data Science</h3>
+                        <p class="text-sm text-neutral-600">Pandas, SQL, Data Visualization, ETL</p>
                     </div>
 
                     <!-- Skill Card 3 -->
-                    <div class="p-6 bg-vapor-bg border-2 border-vapor-orange hover:bg-vapor-orange/10 transition-colors group shadow-[4px_4px_0px_#FF4500]">
-                        <i data-lucide="code-2" class="h-10 w-10 text-vapor-orange mb-4"></i>
-                        <h3 class="text-sm font-display text-white mb-2 uppercase">Full Stack</h3>
-                        <p class="text-lg font-vt323 text-vapor-orange">React, FastAPI, Docker</p>
+                    <div class="p-8 rounded-2xl bg-neutral-50 hover:bg-neutral-100 transition-colors">
+                        <i data-lucide="code-2" class="h-8 w-8 text-neutral-900 mb-6"></i>
+                        <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">Full Stack</h3>
+                        <p class="text-sm text-neutral-600">React, TypeScript, FastAPI, Node.js</p>
                     </div>
 
                      <!-- Skill Card 4 -->
-                     <div class="p-6 bg-vapor-bg border-2 border-white hover:bg-white/10 transition-colors group shadow-[4px_4px_0px_#FFFFFF]">
-                        <i data-lucide="cpu" class="h-10 w-10 text-white mb-4"></i>
-                        <h3 class="text-sm font-display text-white mb-2 uppercase">Engenharia</h3>
-                        <p class="text-lg font-vt323 text-gray-300">MLOps, CI/CD, Algoritmos</p>
+                     <div class="p-8 rounded-2xl bg-neutral-50 hover:bg-neutral-100 transition-colors">
+                        <i data-lucide="cpu" class="h-8 w-8 text-neutral-900 mb-6"></i>
+                        <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">DevOps</h3>
+                        <p class="text-sm text-neutral-600">Docker, Kubernetes, AWS, CI/CD</p>
                     </div>
                 </div>
             </div>
@@ -184,138 +168,123 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="py-20 bg-vapor-bg relative border-t-4 border-vapor-pink">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-16">
-                <h2 class="text-lg text-vapor-cyan font-display tracking-widest uppercase drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">Select Mission</h2>
-                <p class="mt-4 text-3xl md:text-4xl leading-8 font-cyber font-bold text-white uppercase text-shadow-neon">
-                    Projetos Realizados
-                </p>
+    <section id="projects" class="py-24 bg-neutral-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-4">Projetos Selecionados</h2>
+                    <p class="text-neutral-600 max-w-xl">Um olhar sobre o que tenho construído recentemente.</p>
+                </div>
+                <a href="#" class="hidden md:flex items-center text-sm font-medium text-neutral-900 hover:text-neutral-600 transition-colors">
+                    Ver todos no GitHub <i data-lucide="arrow-right" class="ml-2 h-4 w-4"></i>
+                </a>
             </div>
 
-            <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
+            <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
                 <!-- Project 1 -->
-                <div class="group border-4 border-vapor-dark bg-vapor-dark transform hover:scale-105 transition-transform duration-300">
-                    <div class="relative h-48 border-b-4 border-vapor-cyan overflow-hidden">
-                        <div class="absolute inset-0 bg-vapor-pink/20 z-10 group-hover:bg-transparent transition-all"></div>
-                        <img class="w-full h-full object-cover filter contrast-125 grayscale group-hover:grayscale-0 transition-all" src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="AI Project">
+                <article class="group cursor-pointer">
+                    <div class="relative overflow-hidden rounded-2xl bg-white aspect-[4/3] mb-6 shadow-sm group-hover:shadow-md transition-all duration-300">
+                        <img class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="NeuroVision">
                     </div>
-                    <div class="p-6 relative">
-                        <div class="absolute -top-6 right-4 bg-vapor-cyan text-vapor-bg font-display text-xs px-2 py-1 border-2 border-white">LEVEL 1</div>
-                        <h3 class="text-xl font-display text-vapor-pink mb-2 uppercase">NeuroVision</h3>
-                        <p class="text-lg font-vt323 text-white mb-4 leading-tight">
-                            Detecção de objetos em tempo real. Uma visão cibernética para máquinas.
-                        </p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-2 py-1 text-sm font-vt323 bg-vapor-bg border border-vapor-cyan text-vapor-cyan">PYTHON</span>
-                            <span class="px-2 py-1 text-sm font-vt323 bg-vapor-bg border border-vapor-cyan text-vapor-cyan">YOLO</span>
-                        </div>
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="px-3 py-1 rounded-full bg-white border border-neutral-200 text-xs font-medium text-neutral-600">Python</span>
+                        <span class="px-3 py-1 rounded-full bg-white border border-neutral-200 text-xs font-medium text-neutral-600">YOLO</span>
                     </div>
-                </div>
+                    <h3 class="text-xl font-display font-bold text-neutral-900 mb-2 group-hover:underline decoration-1 underline-offset-4">NeuroVision</h3>
+                    <p class="text-neutral-600 text-sm leading-relaxed">
+                        Sistema de detecção de objetos em tempo real otimizado para dispositivos de borda. Alta precisão com baixa latência.
+                    </p>
+                </article>
 
                 <!-- Project 2 -->
-                <div class="group border-4 border-vapor-dark bg-vapor-dark transform hover:scale-105 transition-transform duration-300">
-                    <div class="relative h-48 border-b-4 border-vapor-pink overflow-hidden">
-                         <div class="absolute inset-0 bg-vapor-cyan/20 z-10 group-hover:bg-transparent transition-all"></div>
-                        <img class="w-full h-full object-cover filter contrast-125 grayscale group-hover:grayscale-0 transition-all" src="https://images.unsplash.com/photo-1518932945647-7a1c969f8be1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Data Project">
+                <article class="group cursor-pointer">
+                    <div class="relative overflow-hidden rounded-2xl bg-white aspect-[4/3] mb-6 shadow-sm group-hover:shadow-md transition-all duration-300">
+                        <img class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Legal.Bot">
                     </div>
-                    <div class="p-6 relative">
-                         <div class="absolute -top-6 right-4 bg-vapor-pink text-white font-display text-xs px-2 py-1 border-2 border-white">LEVEL 2</div>
-                        <h3 class="text-xl font-display text-vapor-cyan mb-2 uppercase">Legal.Bot</h3>
-                        <p class="text-lg font-vt323 text-white mb-4 leading-tight">
-                            Assistente jurídico powered by LLMs. O futuro da lei é binário.
-                        </p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-2 py-1 text-sm font-vt323 bg-vapor-bg border border-vapor-pink text-vapor-pink">OPENAI</span>
-                            <span class="px-2 py-1 text-sm font-vt323 bg-vapor-bg border border-vapor-pink text-vapor-pink">LANGCHAIN</span>
-                        </div>
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="px-3 py-1 rounded-full bg-white border border-neutral-200 text-xs font-medium text-neutral-600">LLM</span>
+                        <span class="px-3 py-1 rounded-full bg-white border border-neutral-200 text-xs font-medium text-neutral-600">LangChain</span>
                     </div>
-                </div>
+                    <h3 class="text-xl font-display font-bold text-neutral-900 mb-2 group-hover:underline decoration-1 underline-offset-4">Legal.Bot</h3>
+                    <p class="text-neutral-600 text-sm leading-relaxed">
+                        Assistente jurídico inteligente capaz de analisar contratos e responder dúvidas com base em jurisprudência.
+                    </p>
+                </article>
 
                 <!-- Project 3 -->
-                <div class="group border-4 border-vapor-dark bg-vapor-dark transform hover:scale-105 transition-transform duration-300">
-                    <div class="relative h-48 border-b-4 border-vapor-orange overflow-hidden">
-                         <div class="absolute inset-0 bg-vapor-orange/20 z-10 group-hover:bg-transparent transition-all"></div>
-                        <img class="w-full h-full object-cover filter contrast-125 grayscale group-hover:grayscale-0 transition-all" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Dashboard">
+                <article class="group cursor-pointer">
+                    <div class="relative overflow-hidden rounded-2xl bg-white aspect-[4/3] mb-6 shadow-sm group-hover:shadow-md transition-all duration-300">
+                        <img class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Future.Finance">
                     </div>
-                    <div class="p-6 relative">
-                         <div class="absolute -top-6 right-4 bg-vapor-orange text-vapor-bg font-display text-xs px-2 py-1 border-2 border-white">LEVEL 3</div>
-                        <h3 class="text-xl font-display text-vapor-orange mb-2 uppercase">Future.Finance</h3>
-                        <p class="text-lg font-vt323 text-white mb-4 leading-tight">
-                            Previsão de mercado com séries temporais. Vendo o futuro antes dele acontecer.
-                        </p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-2 py-1 text-sm font-vt323 bg-vapor-bg border border-vapor-orange text-vapor-orange">PROPHET</span>
-                            <span class="px-2 py-1 text-sm font-vt323 bg-vapor-bg border border-vapor-orange text-vapor-orange">STREAMLIT</span>
-                        </div>
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="px-3 py-1 rounded-full bg-white border border-neutral-200 text-xs font-medium text-neutral-600">TimeSeries</span>
+                        <span class="px-3 py-1 rounded-full bg-white border border-neutral-200 text-xs font-medium text-neutral-600">Streamlit</span>
                     </div>
-                </div>
+                    <h3 class="text-xl font-display font-bold text-neutral-900 mb-2 group-hover:underline decoration-1 underline-offset-4">Future.Finance</h3>
+                    <p class="text-neutral-600 text-sm leading-relaxed">
+                        Dashboard interativo para previsão de séries temporais financeiras utilizando o modelo Prophet do Facebook.
+                    </p>
+                </article>
+            </div>
+            
+            <div class="mt-12 text-center md:hidden">
+                <a href="#" class="inline-flex items-center text-sm font-medium text-neutral-900 hover:text-neutral-600 transition-colors">
+                    Ver todos no GitHub <i data-lucide="arrow-right" class="ml-2 h-4 w-4"></i>
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-vapor-dark border-t-4 border-vapor-orange relative overflow-hidden">
-        <!-- Decoration Grid -->
-        <div class="absolute inset-0 opacity-10 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+    <section id="contact" class="py-24 bg-white border-t border-neutral-100">
+        <div class="max-w-3xl mx-auto px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-neutral-900 mb-6">Vamos Conversar?</h2>
+            <p class="text-xl text-neutral-600 mb-12">
+                Estou sempre aberto a discutir novos projetos, ideias de IA ou oportunidades de colaboração.
+            </p>
+            
+            <form action="#" method="POST" class="text-left space-y-6 bg-neutral-50 p-8 rounded-3xl shadow-sm border border-neutral-100">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-neutral-700 mb-2">Nome</label>
+                        <input type="text" name="name" id="name" class="block w-full rounded-xl border-neutral-200 bg-white shadow-sm focus:border-neutral-900 focus:ring-neutral-900 p-3 transition-colors" placeholder="Seu nome">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-neutral-700 mb-2">Email</label>
+                        <input type="email" name="email" id="email" class="block w-full rounded-xl border-neutral-200 bg-white shadow-sm focus:border-neutral-900 focus:ring-neutral-900 p-3 transition-colors" placeholder="seu@email.com">
+                    </div>
+                </div>
+                <div>
+                    <label for="message" class="block text-sm font-medium text-neutral-700 mb-2">Mensagem</label>
+                    <textarea id="message" name="message" rows="4" class="block w-full rounded-xl border-neutral-200 bg-white shadow-sm focus:border-neutral-900 focus:ring-neutral-900 p-3 transition-colors" placeholder="Como posso ajudar?"></textarea>
+                </div>
+                <div>
+                    <button type="submit" class="w-full py-4 px-6 rounded-xl bg-neutral-900 text-white text-base font-medium hover:bg-neutral-800 transition-all shadow-md hover:shadow-lg">
+                        Enviar Mensagem
+                    </button>
+                </div>
+            </form>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="max-w-3xl mx-auto text-center mb-12">
-                <h2 class="text-3xl font-display text-white mb-6 uppercase drop-shadow-[4px_4px_0px_#FF00FF]">
-                    Insert Coin to <span class="text-vapor-cyan">Connect</span>
-                </h2>
-                <p class="text-2xl font-vt323 text-vapor-pink mb-8">
-                    Tem uma ideia radical? Vamos conversar.
-                </p>
+            <div class="mt-16 flex justify-center space-x-8">
+                <a href="#" class="text-neutral-400 hover:text-neutral-900 transition-colors">
+                    <span class="sr-only">GitHub</span>
+                    <i data-lucide="github" class="h-6 w-6"></i>
+                </a>
+                <a href="#" class="text-neutral-400 hover:text-neutral-900 transition-colors">
+                    <span class="sr-only">LinkedIn</span>
+                    <i data-lucide="linkedin" class="h-6 w-6"></i>
+                </a>
+                <a href="#" class="text-neutral-400 hover:text-neutral-900 transition-colors">
+                    <span class="sr-only">Twitter</span>
+                    <i data-lucide="twitter" class="h-6 w-6"></i>
+                </a>
             </div>
             
-            <div class="max-w-xl mx-auto bg-vapor-bg p-8 border-4 border-white shadow-[8px_8px_0px_#00FFFF]">
-                <form action="#" method="POST" class="grid grid-cols-1 gap-y-6">
-                    <div>
-                        <label for="name" class="block text-xl font-vt323 text-vapor-cyan uppercase mb-1">Nome do Jogador</label>
-                        <input type="text" name="name" id="name" class="block w-full bg-vapor-dark border-2 border-vapor-pink p-3 text-white font-mono focus:outline-none focus:shadow-[0_0_15px_#FF00FF] transition-all" placeholder="INSIRA SEU NOME">
-                    </div>
-                    <div>
-                        <label for="email" class="block text-xl font-vt323 text-vapor-cyan uppercase mb-1">Email de Contato</label>
-                        <input type="email" name="email" id="email" class="block w-full bg-vapor-dark border-2 border-vapor-pink p-3 text-white font-mono focus:outline-none focus:shadow-[0_0_15px_#FF00FF] transition-all" placeholder="USER@NET.COM">
-                    </div>
-                    <div>
-                        <label for="message" class="block text-xl font-vt323 text-vapor-cyan uppercase mb-1">Mensagem</label>
-                        <textarea id="message" name="message" rows="4" class="block w-full bg-vapor-dark border-2 border-vapor-pink p-3 text-white font-mono focus:outline-none focus:shadow-[0_0_15px_#FF00FF] transition-all" placeholder="DIGITE SUA MENSAGEM..."></textarea>
-                    </div>
-                    <div>
-                        <button type="submit" class="w-full py-4 px-6 border-2 border-white text-lg font-display text-vapor-bg bg-gradient-to-r from-vapor-cyan to-vapor-pink hover:from-vapor-pink hover:to-vapor-cyan transition-all uppercase tracking-widest shadow-[4px_4px_0px_#FFFFFF] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
-                            Enviar Dados
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="mt-16 flex justify-center space-x-12">
-                <a href="#" class="text-vapor-cyan hover:text-white hover:scale-125 transition-transform duration-300 hover:drop-shadow-[0_0_10px_#00FFFF]">
-                    <i data-lucide="github" class="h-10 w-10"></i>
-                </a>
-                <a href="#" class="text-vapor-pink hover:text-white hover:scale-125 transition-transform duration-300 hover:drop-shadow-[0_0_10px_#FF00FF]">
-                    <i data-lucide="linkedin" class="h-10 w-10"></i>
-                </a>
-                <a href="#" class="text-vapor-orange hover:text-white hover:scale-125 transition-transform duration-300 hover:drop-shadow-[0_0_10px_#FF4500]">
-                    <i data-lucide="twitter" class="h-10 w-10"></i>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-vapor-bg border-t-2 border-vapor-pink/50">
-        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
-            <span class="text-lg font-display text-transparent bg-clip-text bg-gradient-to-r from-vapor-cyan to-vapor-pink">
-                &copy; 1985-2023 DEV.85
-            </span>
-            <p class="mt-2 text-sm text-gray-500 font-vt323 text-xl">
-                FEITO COM <i data-lucide="joystick" class="inline-block h-4 w-4 text-vapor-orange"></i> E NOSTALGIA
+            <p class="mt-12 text-sm text-neutral-400">
+                &copy; 2023 DEV.AI. Todos os direitos reservados.
             </p>
         </div>
-    </footer>
+    </section>
 
     <!-- Link JS -->
     <script src="script.js"></script>
