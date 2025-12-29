@@ -1,94 +1,181 @@
-/* Minimalist Custom CSS */
+/* Cyber-Minimalist Theme & 3D Tilt */
 
-/* 1. Custom Scrollbar - Minimal */
-::-webkit-scrollbar {
-    width: 10px;
-    background: #fafafa;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    /* Default (Dark / Cyber) */
+    --bg-body: #050505;
+    --text-main: #ededed;
+    --text-muted: #a1a1aa;
+    --card-bg: rgba(23, 23, 23, 0.6);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --accent-glow: rgba(99, 102, 241, 0.5);
+    --nav-bg: rgba(0, 0, 0, 0.5);
+    --nav-border: rgba(255, 255, 255, 0.05);
 }
 
-::-webkit-scrollbar-thumb {
-    background: #e5e5e5;
-    border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #d4d4d4;
-}
-
-/* 2. Global Smoothness */
-html {
-    scroll-behavior: smooth;
+[data-theme="light"] {
+    /* Light (Lab Mode) - Clean but Soft */
+    --bg-body: #f8fafc;
+    /* Slate 50 - Softer than pure white */
+    --text-main: #0f172a;
+    /* Slate 900 - High Contrast */
+    --text-muted: #475569;
+    /* Slate 600 */
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --card-border: rgba(148, 163, 184, 0.2);
+    /* Slate 400 with opacity */
+    --accent-glow: rgba(79, 70, 229, 0.2);
+    --nav-bg: rgba(255, 255, 255, 0.85);
+    --nav-border: rgba(0, 0, 0, 0.05);
 }
 
 body {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 3. Typography Adjustments */
-h1, h2, h3, h4, h5, h6 {
-    letter-spacing: -0.02em; /* Tighter tracking for headings */
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    background: var(--bg-body);
 }
 
-/* 4. Subtle Animations */
-.group:hover .group-hover\:scale-105 {
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+::-webkit-scrollbar-thumb {
+    background: var(--text-muted);
+    border-radius: 3px;
 }
 
-/* 5. Premium Texture & Details */
-
-/* Noise Texture Overlay */
-.bg-noise {
-    position: fixed;
+/* Canvas Background */
+#canvas-container {
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
+    z-index: -1;
     pointer-events: none;
-    z-index: 50; /* Above most content, but below modals/nav if needed. Low opacity makes it fine. */
-    opacity: 0.04;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    overflow: hidden;
 }
 
-/* Blueprint Grid Background */
-.bg-grid-pattern {
-    background-size: 40px 40px;
-    background-image:
-        linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+/* Bento Grid Layout Utility */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.5rem;
 }
 
-/* Premium Card (Glassmorphism) */
-.card-premium {
-    background: rgba(255, 255, 255, 0.6);
+@media (min-width: 768px) {
+    .bento-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* 3D Tilt Card Base */
+.tilt-card {
+    position: relative;
+    transform-style: preserve-3d;
+    transform: perspective(1000px);
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
     backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.1s ease-out;
+    will-change: transform;
+    overflow: hidden;
+    color: var(--text-main);
+    /* Ensure text inherits correctly */
 }
 
-.card-premium:hover {
-    transform: translateY(-5px);
-    border-color: rgba(23, 23, 23, 0.8); /* neutral-900 */
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+/* Inner content popping out */
+.tilt-content {
+    transform: translateZ(20px);
 }
 
-/* Floating Math Symbols */
-.math-symbol {
+/* Specular Highlight / Glare */
+.tilt-card::before {
+    content: "";
     position: absolute;
-    font-family: 'Times New Roman', serif;
-    font-style: italic;
-    color: rgba(0, 0, 0, 0.04);
+    inset: 0;
+    /* Adapting gradient for both modes via variables isn't trivial, sticking to white glare works for both */
+    background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            rgba(255, 255, 255, 0.1),
+            transparent 40%);
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.5s;
     pointer-events: none;
-    user-select: none;
-    z-index: 0;
 }
 
-/* Typography Interaction */
-.hover-reveal {
-    transition: color 0.5s ease;
+.tilt-card:hover::before {
+    opacity: 1;
 }
-.hover-reveal:hover {
-    color: #171717; /* neutral-900 */
+
+.tilt-card:hover {
+    border-color: var(--text-muted);
+    /* Gentle highlight */
+    box-shadow: 0 0 30px -10px var(--accent-glow);
+}
+
+/* Typography Overrides */
+h1,
+h2,
+h3 {
+    letter-spacing: -0.03em;
+    color: var(--text-main);
+}
+
+p {
+    color: var(--text-muted);
+}
+
+.text-gradient {
+    /* Optional: can make this dependent on theme if needed, but simple white/purple works in dark, maybe needs tweak in light */
+    background: linear-gradient(to right, var(--text-main), #a5b4fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Gold Premium Badge */
+.badge-gold {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(218, 165, 32, 0.05));
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    color: #fbbf24;
+    /* Amber-400 */
+    box-shadow: 0 0 15px -5px rgba(255, 215, 0, 0.2);
+}
+
+[data-theme="light"] .badge-gold {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(218, 165, 32, 0.1));
+    border: 1px solid rgba(218, 165, 32, 0.4);
+    color: #b45309;
+    /* Amber-700 for readability on light */
+}
+
+/* Tech Stack Marquee/Grid */
+.tech-tag {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+}
+
+.tech-tag:hover {
+    border-color: var(--accent-glow);
+    color: var(--text-main);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px -2px var(--accent-glow);
+}
+
+header {
+    background-color: var(--nav-bg);
+    border-bottom-color: var(--nav-border);
 }
