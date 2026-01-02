@@ -152,7 +152,7 @@ class ManifoldBackground {
 
         this.mesh = new THREE.Mesh(geometry, material);
         this.mesh.rotation.x = -Math.PI * 0.35;
-        this.mesh.position.y = -15; // Higher up
+        this.mesh.position.y = -5; // Higher up
         this.mesh.position.z = -5;
         this.scene.add(this.mesh);
     }
@@ -251,3 +251,4 @@ document.addEventListener('DOMContentLoaded', () => {
     const bg = new ManifoldBackground();
     new ThemeManager(bg);
 });
+
