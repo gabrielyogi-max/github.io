@@ -34,8 +34,8 @@ class TiltEffect {
     }
 }
 
-// --- HYBRID 3D BACKGROUND: MESH + SUBTLE NEURAL NETWORK ---
-class HybridBackground {
+// --- EMBEDDING MANIFOLD MESH BACKGROUND ---
+class ManifoldBackground {
     constructor() {
         this.container = document.getElementById('canvas-container');
         if (!this.container) return;
@@ -55,8 +55,8 @@ class HybridBackground {
         this.scene = new THREE.Scene();
 
         // Camera
-        this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.set(0, 0, 35);
+        this.camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.camera.position.set(0, 0, 40);
 
         // Renderer
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -65,10 +65,8 @@ class HybridBackground {
         this.renderer.setClearColor(0x000000, 0);
         this.container.appendChild(this.renderer.domElement);
 
-        // Create elements
-        this.createWaveMesh();
-        this.createNeuralNodes();
-        this.createDataFlow();
+        // Create manifold mesh
+        this.createManifoldMesh();
 
         // Events
         window.addEventListener('resize', () => this.onResize());
@@ -77,18 +75,19 @@ class HybridBackground {
         this.animate();
     }
 
-    createWaveMesh() {
+    createManifoldMesh() {
         const THREE = this.THREE;
 
-        // Beautiful wave mesh (like before)
-        const geometry = new THREE.PlaneGeometry(100, 60, 60, 40);
+        // Large mesh positioned lower in view
+        const geometry = new THREE.PlaneGeometry(120, 70, 80, 50);
 
         const material = new THREE.ShaderMaterial({
             uniforms: {
                 uTime: { value: 0 },
                 uMouse: { value: new THREE.Vector2(0, 0) },
-                uColor1: { value: new THREE.Color(0x6366f1) },
-                uColor2: { value: new THREE.Color(0x8b5cf6) },
+                uColor1: { value: new THREE.Color(0x6366f1) }, // Indigo
+                uColor2: { value: new THREE.Color(0x8b5cf6) }, // Purple
+                uColor3: { value: new THREE.Color(0x0ea5e9) }, // Cyan accent
             },
             vertexShader: `
                 uniform float uTime;
@@ -96,20 +95,26 @@ class HybridBackground {
                 varying vec2 vUv;
                 varying float vElevation;
 
+                // Simplex noise-like function for organic movement
+                float wave(vec2 p, float t) {
+                    return sin(p.x * 0.12 + t * 0.4) * sin(p.y * 0.1 + t * 0.3) * 3.0
+                         + sin(p.x * 0.08 - t * 0.25) * 2.0
+                         + sin((p.x + p.y) * 0.06 + t * 0.35) * 2.5;
+                }
+
                 void main() {
                     vUv = uv;
                     vec3 pos = position;
 
-                    // Smooth waves
-                    float wave1 = sin(pos.x * 0.15 + uTime * 0.4) * 2.5;
-                    float wave2 = sin(pos.y * 0.12 + uTime * 0.3) * 2.0;
-                    float wave3 = sin((pos.x + pos.y) * 0.1 + uTime * 0.35) * 1.5;
+                    // Organic wave deformation
+                    float elevation = wave(pos.xy, uTime);
 
-                    // Mouse influence
-                    float dist = distance(pos.xy * 0.03, uMouse);
-                    float mouseWave = exp(-dist * 1.5) * 4.0;
+                    // Mouse interaction - creates a smooth bump
+                    vec2 mousePos = uMouse * 30.0;
+                    float dist = distance(pos.xy, mousePos);
+                    float mouseBump = exp(-dist * 0.08) * 5.0;
 
-                    pos.z = wave1 + wave2 + wave3 + mouseWave;
+                    pos.z = elevation + mouseBump;
                     vElevation = pos.z;
 
                     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
@@ -118,115 +123,38 @@ class HybridBackground {
             fragmentShader: `
                 uniform vec3 uColor1;
                 uniform vec3 uColor2;
+                uniform vec3 uColor3;
+                uniform float uTime;
                 varying vec2 vUv;
                 varying float vElevation;
 
                 void main() {
-                    vec3 color = mix(uColor1, uColor2, vUv.x + vElevation * 0.05);
+                    // Gradient based on position
+                    vec3 color = mix(uColor1, uColor2, vUv.x);
                     
-                    // Fade edges
-                    float alpha = smoothstep(0.0, 0.15, vUv.x) * smoothstep(1.0, 0.85, vUv.x);
-                    alpha *= smoothstep(0.0, 0.15, vUv.y) * smoothstep(1.0, 0.85, vUv.y);
-                    alpha *= 0.12;
+                    // Add cyan accent based on elevation
+                    float elevationMix = smoothstep(-2.0, 6.0, vElevation);
+                    color = mix(color, uColor3, elevationMix * 0.3);
+
+                    // Fade edges smoothly
+                    float alpha = smoothstep(0.0, 0.2, vUv.x) * smoothstep(1.0, 0.8, vUv.x);
+                    alpha *= smoothstep(0.0, 0.25, vUv.y) * smoothstep(1.0, 0.75, vUv.y);
+                    alpha *= 0.18; // Overall opacity
 
                     gl_FragColor = vec4(color, alpha);
                 }
             `,
             transparent: true,
             side: THREE.DoubleSide,
-            wireframe: true
+            wireframe: true,
+            depthWrite: false
         });
 
         this.mesh = new THREE.Mesh(geometry, material);
-        this.mesh.rotation.x = -Math.PI * 0.35;
-        this.mesh.position.y = -15;
-        this.mesh.position.z = -10;
+        this.mesh.rotation.x = -Math.PI * 0.45; // Tilted angle
+        this.mesh.position.y = -25; // Lower position
+        this.mesh.position.z = -5;
         this.scene.add(this.mesh);
-    }
-
-    createNeuralNodes() {
-        const THREE = this.THREE;
-
-        // Subtle floating nodes (much smaller and fewer)
-        this.nodes = [];
-        const nodeCount = 25;
-
-        const nodeGeo = new THREE.SphereGeometry(0.15, 12, 12);
-        const nodeMat = new THREE.MeshBasicMaterial({
-            color: 0x8b5cf6,
-            transparent: true,
-            opacity: 0.5
-        });
-
-        for (let i = 0; i < nodeCount; i++) {
-            const node = new THREE.Mesh(nodeGeo, nodeMat.clone());
-            node.position.set(
-                (Math.random() - 0.5) * 60,
-                (Math.random() - 0.5) * 35,
-                (Math.random() - 0.5) * 15
-            );
-            node.userData = {
-                originalPos: node.position.clone(),
-                phase: Math.random() * Math.PI * 2,
-                speed: 0.3 + Math.random() * 0.4
-            };
-            this.nodes.push(node);
-            this.scene.add(node);
-        }
-
-        // Create subtle connections between nearby nodes
-        this.connections = [];
-        const lineMat = new THREE.LineBasicMaterial({
-            color: 0x6366f1,
-            transparent: true,
-            opacity: 0.08
-        });
-
-        for (let i = 0; i < this.nodes.length; i++) {
-            for (let j = i + 1; j < this.nodes.length; j++) {
-                const dist = this.nodes[i].position.distanceTo(this.nodes[j].position);
-                if (dist < 18) { // Only connect nearby nodes
-                    const geo = new THREE.BufferGeometry().setFromPoints([
-                        this.nodes[i].position,
-                        this.nodes[j].position
-                    ]);
-                    const line = new THREE.Line(geo, lineMat);
-                    line.userData = { node1: this.nodes[i], node2: this.nodes[j] };
-                    this.connections.push(line);
-                    this.scene.add(line);
-                }
-            }
-        }
-    }
-
-    createDataFlow() {
-        const THREE = this.THREE;
-
-        // Flowing particles (data moving through network)
-        const particleCount = 80;
-        const geometry = new THREE.BufferGeometry();
-        const positions = new Float32Array(particleCount * 3);
-        this.velocities = [];
-
-        for (let i = 0; i < particleCount; i++) {
-            positions[i * 3] = (Math.random() - 0.5) * 70;
-            positions[i * 3 + 1] = (Math.random() - 0.5) * 40;
-            positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
-            this.velocities.push((Math.random() + 0.5) * 0.15);
-        }
-
-        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-        const material = new THREE.PointsMaterial({
-            color: 0x0ea5e9,
-            size: 0.25,
-            transparent: true,
-            opacity: 0.4,
-            blending: THREE.AdditiveBlending
-        });
-
-        this.particles = new THREE.Points(geometry, material);
-        this.scene.add(this.particles);
     }
 
     onResize() {
@@ -245,51 +173,33 @@ class HybridBackground {
 
         const time = this.clock.getElapsedTime();
 
-        // Smooth mouse
+        // Smooth mouse interpolation
         this.mouse.x += (this.targetMouse.x - this.mouse.x) * 0.04;
         this.mouse.y += (this.targetMouse.y - this.mouse.y) * 0.04;
 
-        // Update wave mesh
+        // Update shader uniforms
         if (this.mesh) {
             this.mesh.material.uniforms.uTime.value = time;
             this.mesh.material.uniforms.uMouse.value.set(this.mouse.x, this.mouse.y);
-            this.mesh.rotation.z = this.mouse.x * 0.05;
+
+            // Subtle rotation based on mouse
+            this.mesh.rotation.z = this.mouse.x * 0.03;
         }
-
-        // Animate nodes (subtle floating)
-        this.nodes.forEach(node => {
-            const { originalPos, phase, speed } = node.userData;
-            node.position.y = originalPos.y + Math.sin(time * speed + phase) * 0.8;
-            node.position.x = originalPos.x + Math.cos(time * speed * 0.7 + phase) * 0.5;
-        });
-
-        // Update connections
-        this.connections.forEach(line => {
-            const pos = line.geometry.attributes.position.array;
-            pos[0] = line.userData.node1.position.x;
-            pos[1] = line.userData.node1.position.y;
-            pos[2] = line.userData.node1.position.z;
-            pos[3] = line.userData.node2.position.x;
-            pos[4] = line.userData.node2.position.y;
-            pos[5] = line.userData.node2.position.z;
-            line.geometry.attributes.position.needsUpdate = true;
-        });
-
-        // Animate data particles
-        if (this.particles) {
-            const pos = this.particles.geometry.attributes.position.array;
-            for (let i = 0; i < this.velocities.length; i++) {
-                pos[i * 3] += this.velocities[i];
-                if (pos[i * 3] > 40) pos[i * 3] = -40;
-            }
-            this.particles.geometry.attributes.position.needsUpdate = true;
-        }
-
-        // Subtle camera movement
-        this.camera.position.x = this.mouse.x * 2;
-        this.camera.position.y = this.mouse.y * 1.5;
 
         this.renderer.render(this.scene, this.camera);
+    }
+
+    // Theme color update
+    updateColors(isDark) {
+        if (!this.mesh) return;
+        const THREE = this.THREE;
+        if (isDark) {
+            this.mesh.material.uniforms.uColor1.value = new THREE.Color(0x6366f1);
+            this.mesh.material.uniforms.uColor2.value = new THREE.Color(0x8b5cf6);
+        } else {
+            this.mesh.material.uniforms.uColor1.value = new THREE.Color(0x4f46e5);
+            this.mesh.material.uniforms.uColor2.value = new THREE.Color(0x7c3aed);
+        }
     }
 }
 
@@ -298,6 +208,7 @@ class ThemeManager {
     constructor(bg) {
         this.toggleBtn = document.getElementById('theme-toggle');
         this.html = document.documentElement;
+        this.bg = bg;
 
         const savedTheme = localStorage.getItem('theme');
         const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -327,12 +238,16 @@ class ThemeManager {
             this.toggleBtn.innerHTML = theme === 'dark' ? sunIcon : moonIcon;
             lucide.createIcons();
         }
+
+        if (this.bg) {
+            this.bg.updateColors(theme === 'dark');
+        }
     }
 }
 
-// Start everything
+// Start
 document.addEventListener('DOMContentLoaded', () => {
     new TiltEffect();
-    const bg = new HybridBackground();
+    const bg = new ManifoldBackground();
     new ThemeManager(bg);
 });
