@@ -34,54 +34,41 @@ class TiltEffect {
     }
 }
 
-// --- THREE.JS 3D MESH BACKGROUND ---
-class MeshBackground {
+// --- NEURAL NETWORK 3D BACKGROUND ---
+class NeuralNetworkBackground {
     constructor() {
         this.container = document.getElementById('canvas-container');
         if (!this.container) return;
 
-        this.scene = null;
-        this.camera = null;
-        this.renderer = null;
-        this.mesh = null;
+        this.nodes = [];
+        this.connections = [];
         this.mouse = { x: 0, y: 0 };
         this.targetMouse = { x: 0, y: 0 };
-        this.clock = null;
 
         this.init();
     }
 
     async init() {
-        // Dynamically import Three.js
         const THREE = await import('https://cdn.jsdelivr.net/npm/three@0.167.0/build/three.module.js');
         this.THREE = THREE;
-
         this.clock = new THREE.Clock();
 
         // Scene
         this.scene = new THREE.Scene();
 
-        // Camera
-        this.camera = new THREE.PerspectiveCamera(
-            75,
-            window.innerWidth / window.innerHeight,
-            0.1,
-            1000
-        );
-        this.camera.position.z = 30;
+        // Camera - positioned to see the network from an angle
+        this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.camera.position.set(0, 0, 50);
 
         // Renderer
-        this.renderer = new THREE.WebGLRenderer({
-            antialias: true,
-            alpha: true
-        });
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setClearColor(0x000000, 0);
         this.container.appendChild(this.renderer.domElement);
 
-        // Create mesh
-        this.createMesh();
+        // Create neural network
+        this.createNeuralNetwork();
 
         // Events
         window.addEventListener('resize', () => this.onResize());
@@ -91,107 +78,160 @@ class MeshBackground {
         this.animate();
     }
 
-    createMesh() {
+    createNeuralNetwork() {
         const THREE = this.THREE;
 
-        // Create a plane with many segments for wave effect
-        const geometry = new THREE.PlaneGeometry(80, 80, 50, 50);
+        // Neural network layers configuration
+        const layers = [
+            { count: 6, x: -35 },   // Input layer
+            { count: 10, x: -17 },  // Hidden 1
+            { count: 12, x: 0 },    // Hidden 2
+            { count: 10, x: 17 },   // Hidden 3
+            { count: 5, x: 35 }     // Output layer
+        ];
 
-        // Custom shader material for gradient + wave
-        const material = new THREE.ShaderMaterial({
-            uniforms: {
-                uTime: { value: 0 },
-                uMouse: { value: new THREE.Vector2(0, 0) },
-                uColor1: { value: new THREE.Color(0x6366f1) }, // Indigo
-                uColor2: { value: new THREE.Color(0x8b5cf6) }, // Purple
-                uColor3: { value: new THREE.Color(0x0ea5e9) }, // Cyan
-            },
-            vertexShader: `
-                uniform float uTime;
-                uniform vec2 uMouse;
-                varying vec2 vUv;
-                varying float vElevation;
+        // Colors for different layers
+        const colors = [
+            0x6366f1, // Indigo
+            0x8b5cf6, // Purple
+            0xa855f7, // Fuchsia
+            0x8b5cf6, // Purple
+            0x0ea5e9  // Cyan
+        ];
 
-                void main() {
-                    vUv = uv;
-                    vec3 pos = position;
+        // Create nodes for each layer
+        layers.forEach((layer, layerIndex) => {
+            const layerNodes = [];
+            const spacing = 50 / layer.count;
 
-                    // Wave effect
-                    float wave1 = sin(pos.x * 0.3 + uTime * 0.5) * 2.0;
-                    float wave2 = sin(pos.y * 0.2 + uTime * 0.3) * 2.0;
-                    float wave3 = sin((pos.x + pos.y) * 0.2 + uTime * 0.4) * 1.5;
+            for (let i = 0; i < layer.count; i++) {
+                const y = (i - layer.count / 2 + 0.5) * spacing;
+                const z = (Math.random() - 0.5) * 10;
 
-                    // Mouse influence
-                    float dist = distance(pos.xy * 0.05, uMouse);
-                    float mouseWave = exp(-dist * 2.0) * 3.0;
+                // Node sphere
+                const geometry = new THREE.SphereGeometry(0.8, 16, 16);
+                const material = new THREE.MeshBasicMaterial({
+                    color: colors[layerIndex],
+                    transparent: true,
+                    opacity: 0.9
+                });
+                const node = new THREE.Mesh(geometry, material);
+                node.position.set(layer.x, y, z);
 
-                    pos.z = wave1 + wave2 + wave3 + mouseWave;
-                    vElevation = pos.z;
+                // Glow effect (larger transparent sphere)
+                const glowGeo = new THREE.SphereGeometry(1.5, 16, 16);
+                const glowMat = new THREE.MeshBasicMaterial({
+                    color: colors[layerIndex],
+                    transparent: true,
+                    opacity: 0.15
+                });
+                const glow = new THREE.Mesh(glowGeo, glowMat);
+                node.add(glow);
 
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-                }
-            `,
-            fragmentShader: `
-                uniform vec3 uColor1;
-                uniform vec3 uColor2;
-                uniform vec3 uColor3;
-                uniform float uTime;
-                varying vec2 vUv;
-                varying float vElevation;
+                // Store original position for animation
+                node.userData = {
+                    originalY: y,
+                    originalZ: z,
+                    phase: Math.random() * Math.PI * 2,
+                    speed: 0.5 + Math.random() * 0.5
+                };
 
-                void main() {
-                    // Gradient based on position and elevation
-                    float mixFactor = (vElevation + 5.0) / 10.0;
-                    vec3 color = mix(uColor1, uColor2, vUv.x);
-                    color = mix(color, uColor3, vUv.y * 0.5);
-                    color = mix(color, uColor2, mixFactor * 0.3);
-
-                    // Fade edges
-                    float alpha = smoothstep(0.0, 0.2, vUv.x) * smoothstep(1.0, 0.8, vUv.x);
-                    alpha *= smoothstep(0.0, 0.2, vUv.y) * smoothstep(1.0, 0.8, vUv.y);
-                    alpha *= 0.15; // Overall opacity
-
-                    gl_FragColor = vec4(color, alpha);
-                }
-            `,
-            transparent: true,
-            side: THREE.DoubleSide,
-            wireframe: true
+                this.scene.add(node);
+                layerNodes.push(node);
+            }
+            this.nodes.push(layerNodes);
         });
 
-        this.mesh = new THREE.Mesh(geometry, material);
-        this.mesh.rotation.x = -Math.PI * 0.4;
-        this.mesh.position.y = -10;
-        this.scene.add(this.mesh);
+        // Create connections between layers
+        this.connectionGroup = new THREE.Group();
 
-        // Add subtle ambient particles
-        this.createParticles();
+        for (let l = 0; l < this.nodes.length - 1; l++) {
+            const currentLayer = this.nodes[l];
+            const nextLayer = this.nodes[l + 1];
+
+            currentLayer.forEach((node1, i) => {
+                // Connect to some nodes in next layer (not all, to avoid clutter)
+                const connectionsCount = Math.min(3, nextLayer.length);
+                const indices = this.getRandomIndices(nextLayer.length, connectionsCount);
+
+                indices.forEach(j => {
+                    const node2 = nextLayer[j];
+                    const connection = this.createConnection(node1, node2, colors[l]);
+                    this.connections.push({
+                        line: connection,
+                        node1: node1,
+                        node2: node2
+                    });
+                    this.connectionGroup.add(connection);
+                });
+            });
+        }
+
+        this.scene.add(this.connectionGroup);
+
+        // Add floating data particles
+        this.createDataParticles();
     }
 
-    createParticles() {
+    getRandomIndices(max, count) {
+        const indices = [];
+        while (indices.length < count) {
+            const idx = Math.floor(Math.random() * max);
+            if (!indices.includes(idx)) indices.push(idx);
+        }
+        return indices;
+    }
+
+    createConnection(node1, node2, color) {
         const THREE = this.THREE;
-        const particleCount = 100;
+
+        const points = [node1.position.clone(), node2.position.clone()];
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+
+        const material = new THREE.LineBasicMaterial({
+            color: color,
+            transparent: true,
+            opacity: 0.2,
+            blending: THREE.AdditiveBlending
+        });
+
+        return new THREE.Line(geometry, material);
+    }
+
+    createDataParticles() {
+        const THREE = this.THREE;
+        const particleCount = 150;
+
         const geometry = new THREE.BufferGeometry();
         const positions = new Float32Array(particleCount * 3);
+        const velocities = [];
 
         for (let i = 0; i < particleCount; i++) {
-            positions[i * 3] = (Math.random() - 0.5) * 60;
-            positions[i * 3 + 1] = (Math.random() - 0.5) * 60;
-            positions[i * 3 + 2] = (Math.random() - 0.5) * 30;
+            // Start particles along connections
+            positions[i * 3] = (Math.random() - 0.5) * 80;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 50;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+
+            velocities.push({
+                x: (Math.random() - 0.3) * 0.3, // Tendency to move right
+                y: (Math.random() - 0.5) * 0.1,
+                z: (Math.random() - 0.5) * 0.1
+            });
         }
 
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
         const material = new THREE.PointsMaterial({
-            color: 0x6366f1,
-            size: 0.15,
+            color: 0x8b5cf6,
+            size: 0.4,
             transparent: true,
-            opacity: 0.4,
+            opacity: 0.6,
             blending: THREE.AdditiveBlending
         });
 
-        this.particles = new THREE.Points(geometry, material);
-        this.scene.add(this.particles);
+        this.dataParticles = new THREE.Points(geometry, material);
+        this.dataParticles.userData.velocities = velocities;
+        this.scene.add(this.dataParticles);
     }
 
     onResize() {
@@ -201,7 +241,6 @@ class MeshBackground {
     }
 
     onMouseMove(e) {
-        // Normalize mouse position to -1 to 1
         this.targetMouse.x = (e.clientX / window.innerWidth) * 2 - 1;
         this.targetMouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
     }
@@ -211,50 +250,73 @@ class MeshBackground {
 
         const time = this.clock.getElapsedTime();
 
-        // Smooth mouse following
-        this.mouse.x += (this.targetMouse.x - this.mouse.x) * 0.05;
-        this.mouse.y += (this.targetMouse.y - this.mouse.y) * 0.05;
+        // Smooth mouse
+        this.mouse.x += (this.targetMouse.x - this.mouse.x) * 0.03;
+        this.mouse.y += (this.targetMouse.y - this.mouse.y) * 0.03;
 
-        // Update uniforms
-        if (this.mesh) {
-            this.mesh.material.uniforms.uTime.value = time;
-            this.mesh.material.uniforms.uMouse.value.set(this.mouse.x, this.mouse.y);
+        // Animate nodes (floating effect)
+        this.nodes.forEach(layer => {
+            layer.forEach(node => {
+                const { originalY, originalZ, phase, speed } = node.userData;
+                node.position.y = originalY + Math.sin(time * speed + phase) * 1.5;
+                node.position.z = originalZ + Math.cos(time * speed * 0.7 + phase) * 1;
+            });
+        });
 
-            // Subtle rotation based on mouse
-            this.mesh.rotation.z = this.mouse.x * 0.1;
+        // Update connections to follow nodes
+        this.connections.forEach(conn => {
+            const positions = conn.line.geometry.attributes.position.array;
+            positions[0] = conn.node1.position.x;
+            positions[1] = conn.node1.position.y;
+            positions[2] = conn.node1.position.z;
+            positions[3] = conn.node2.position.x;
+            positions[4] = conn.node2.position.y;
+            positions[5] = conn.node2.position.z;
+            conn.line.geometry.attributes.position.needsUpdate = true;
+        });
+
+        // Animate data particles (flowing through network)
+        if (this.dataParticles) {
+            const positions = this.dataParticles.geometry.attributes.position.array;
+            const velocities = this.dataParticles.userData.velocities;
+
+            for (let i = 0; i < velocities.length; i++) {
+                positions[i * 3] += velocities[i].x;
+                positions[i * 3 + 1] += velocities[i].y;
+                positions[i * 3 + 2] += velocities[i].z;
+
+                // Reset if out of bounds
+                if (positions[i * 3] > 45) {
+                    positions[i * 3] = -45;
+                    positions[i * 3 + 1] = (Math.random() - 0.5) * 40;
+                }
+            }
+            this.dataParticles.geometry.attributes.position.needsUpdate = true;
         }
 
-        // Rotate particles slowly
-        if (this.particles) {
-            this.particles.rotation.y = time * 0.02;
-        }
+        // Camera response to mouse (subtle)
+        this.camera.position.x = this.mouse.x * 5;
+        this.camera.position.y = this.mouse.y * 3;
+        this.camera.lookAt(0, 0, 0);
+
+        // Subtle rotation of entire network
+        this.scene.rotation.y = Math.sin(time * 0.1) * 0.1 + this.mouse.x * 0.1;
+        this.scene.rotation.x = this.mouse.y * 0.1;
 
         this.renderer.render(this.scene, this.camera);
     }
 
-    // Update colors for theme
     updateColors(isDark) {
-        if (!this.mesh) return;
-        const THREE = this.THREE;
-
-        if (isDark) {
-            this.mesh.material.uniforms.uColor1.value = new THREE.Color(0x6366f1);
-            this.mesh.material.uniforms.uColor2.value = new THREE.Color(0x8b5cf6);
-            this.mesh.material.uniforms.uColor3.value = new THREE.Color(0x0ea5e9);
-        } else {
-            this.mesh.material.uniforms.uColor1.value = new THREE.Color(0x4f46e5);
-            this.mesh.material.uniforms.uColor2.value = new THREE.Color(0x7c3aed);
-            this.mesh.material.uniforms.uColor3.value = new THREE.Color(0x0284c7);
-        }
+        // Could update node colors based on theme if needed
     }
 }
 
 // --- THEME MANAGER ---
 class ThemeManager {
-    constructor(meshBg) {
+    constructor(neuralBg) {
         this.toggleBtn = document.getElementById('theme-toggle');
         this.html = document.documentElement;
-        this.meshBg = meshBg;
+        this.neuralBg = neuralBg;
 
         const savedTheme = localStorage.getItem('theme');
         const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -285,9 +347,8 @@ class ThemeManager {
             lucide.createIcons();
         }
 
-        // Update 3D mesh colors
-        if (this.meshBg) {
-            this.meshBg.updateColors(theme === 'dark');
+        if (this.neuralBg) {
+            this.neuralBg.updateColors(theme === 'dark');
         }
     }
 }
@@ -295,6 +356,6 @@ class ThemeManager {
 // Start everything when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     new TiltEffect();
-    const meshBg = new MeshBackground();
-    new ThemeManager(meshBg);
+    const neuralBg = new NeuralNetworkBackground();
+    new ThemeManager(neuralBg);
 });
