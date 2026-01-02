@@ -151,9 +151,9 @@ class ManifoldBackground {
         });
 
         this.mesh = new THREE.Mesh(geometry, material);
-        this.mesh.rotation.x = -Math.PI * 0.45; // Tilted angle
-        this.mesh.position.y = -25; // Lower position
-        this.mesh.position.z = -5;
+        this.mesh.rotation.x = -Math.PI * 0.5; // More horizontal
+        this.mesh.position.y = -45; // Much lower
+        this.mesh.position.z = -15;
         this.scene.add(this.mesh);
     }
 
