@@ -34,8 +34,8 @@ class TiltEffect {
     }
 }
 
-// --- EMBEDDING MANIFOLD MESH BACKGROUND ---
-class ManifoldBackground {
+// --- THREE.JS 3D MESH + STARS BACKGROUND ---
+class MeshBackground {
     constructor() {
         this.container = document.getElementById('canvas-container');
         if (!this.container) return;
@@ -55,8 +55,8 @@ class ManifoldBackground {
         this.scene = new THREE.Scene();
 
         // Camera
-        this.camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.set(0, 0, 40);
+        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.camera.position.z = 30;
 
         // Renderer
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -65,8 +65,9 @@ class ManifoldBackground {
         this.renderer.setClearColor(0x000000, 0);
         this.container.appendChild(this.renderer.domElement);
 
-        // Create manifold mesh
-        this.createManifoldMesh();
+        // Create elements
+        this.createStars();
+        this.createMesh();
 
         // Events
         window.addEventListener('resize', () => this.onResize());
@@ -75,19 +76,80 @@ class ManifoldBackground {
         this.animate();
     }
 
-    createManifoldMesh() {
+    createStars() {
+        const THREE = this.THREE;
+        const starCount = 300;
+
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(starCount * 3);
+        const sizes = new Float32Array(starCount);
+
+        for (let i = 0; i < starCount; i++) {
+            // Spread stars across the viewport
+            positions[i * 3] = (Math.random() - 0.5) * 100;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 60;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 50 - 10;
+
+            sizes[i] = Math.random() * 2 + 0.5;
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+        // Custom shader for twinkling stars
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime: { value: 0 },
+                uColor: { value: new THREE.Color(0xffffff) }
+            },
+            vertexShader: `
+                attribute float size;
+                varying float vSize;
+                void main() {
+                    vSize = size;
+                    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                    gl_PointSize = size * (300.0 / -mvPosition.z);
+                    gl_Position = projectionMatrix * mvPosition;
+                }
+            `,
+            fragmentShader: `
+                uniform float uTime;
+                uniform vec3 uColor;
+                varying float vSize;
+                void main() {
+                    // Circular point
+                    float dist = length(gl_PointCoord - vec2(0.5));
+                    if (dist > 0.5) discard;
+                    
+                    // Soft glow
+                    float alpha = 1.0 - smoothstep(0.0, 0.5, dist);
+                    alpha *= 0.6 + 0.4 * sin(uTime * 2.0 + vSize * 10.0); // Twinkle
+                    
+                    gl_FragColor = vec4(uColor, alpha);
+                }
+            `,
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        this.stars = new THREE.Points(geometry, material);
+        this.scene.add(this.stars);
+    }
+
+    createMesh() {
         const THREE = this.THREE;
 
-        // Large mesh positioned lower in view
-        const geometry = new THREE.PlaneGeometry(120, 70, 80, 50);
+        // Wave mesh plane
+        const geometry = new THREE.PlaneGeometry(80, 80, 50, 50);
 
         const material = new THREE.ShaderMaterial({
             uniforms: {
                 uTime: { value: 0 },
                 uMouse: { value: new THREE.Vector2(0, 0) },
-                uColor1: { value: new THREE.Color(0x6366f1) }, // Indigo
-                uColor2: { value: new THREE.Color(0x8b5cf6) }, // Purple
-                uColor3: { value: new THREE.Color(0x0ea5e9) }, // Cyan accent
+                uColor1: { value: new THREE.Color(0x6366f1) },
+                uColor2: { value: new THREE.Color(0x8b5cf6) },
+                uColor3: { value: new THREE.Color(0x0ea5e9) },
             },
             vertexShader: `
                 uniform float uTime;
@@ -95,26 +157,20 @@ class ManifoldBackground {
                 varying vec2 vUv;
                 varying float vElevation;
 
-                // Simplex noise-like function for organic movement
-                float wave(vec2 p, float t) {
-                    return sin(p.x * 0.12 + t * 0.4) * sin(p.y * 0.1 + t * 0.3) * 3.0
-                         + sin(p.x * 0.08 - t * 0.25) * 2.0
-                         + sin((p.x + p.y) * 0.06 + t * 0.35) * 2.5;
-                }
-
                 void main() {
                     vUv = uv;
                     vec3 pos = position;
 
-                    // Organic wave deformation
-                    float elevation = wave(pos.xy, uTime);
+                    // Smooth waves
+                    float wave1 = sin(pos.x * 0.3 + uTime * 0.5) * 2.0;
+                    float wave2 = sin(pos.y * 0.2 + uTime * 0.3) * 2.0;
+                    float wave3 = sin((pos.x + pos.y) * 0.2 + uTime * 0.4) * 1.5;
 
-                    // Mouse interaction - creates a smooth bump
-                    vec2 mousePos = uMouse * 30.0;
-                    float dist = distance(pos.xy, mousePos);
-                    float mouseBump = exp(-dist * 0.08) * 5.0;
+                    // Mouse influence
+                    float dist = distance(pos.xy * 0.05, uMouse);
+                    float mouseWave = exp(-dist * 2.0) * 3.0;
 
-                    pos.z = elevation + mouseBump;
+                    pos.z = wave1 + wave2 + wave3 + mouseWave;
                     vElevation = pos.z;
 
                     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
@@ -129,31 +185,27 @@ class ManifoldBackground {
                 varying float vElevation;
 
                 void main() {
-                    // Gradient based on position
+                    // Gradient
                     vec3 color = mix(uColor1, uColor2, vUv.x);
-                    
-                    // Add cyan accent based on elevation
-                    float elevationMix = smoothstep(-2.0, 6.0, vElevation);
-                    color = mix(color, uColor3, elevationMix * 0.3);
+                    color = mix(color, uColor3, vUv.y * 0.5);
+                    color = mix(color, uColor2, (vElevation + 5.0) / 10.0 * 0.3);
 
-                    // Fade edges smoothly
+                    // Fade edges
                     float alpha = smoothstep(0.0, 0.2, vUv.x) * smoothstep(1.0, 0.8, vUv.x);
-                    alpha *= smoothstep(0.0, 0.25, vUv.y) * smoothstep(1.0, 0.75, vUv.y);
-                    alpha *= 0.18; // Overall opacity
+                    alpha *= smoothstep(0.0, 0.2, vUv.y) * smoothstep(1.0, 0.8, vUv.y);
+                    alpha *= 0.15;
 
                     gl_FragColor = vec4(color, alpha);
                 }
             `,
             transparent: true,
             side: THREE.DoubleSide,
-            wireframe: true,
-            depthWrite: false
+            wireframe: true
         });
 
         this.mesh = new THREE.Mesh(geometry, material);
-        this.mesh.rotation.x = -Math.PI * 0.35;
-        this.mesh.position.y = -5; // Higher up
-        this.mesh.position.z = -5;
+        this.mesh.rotation.x = -Math.PI * 0.4;
+        this.mesh.position.y = -10;
         this.scene.add(this.mesh);
     }
 
@@ -173,23 +225,30 @@ class ManifoldBackground {
 
         const time = this.clock.getElapsedTime();
 
-        // Smooth mouse interpolation
-        this.mouse.x += (this.targetMouse.x - this.mouse.x) * 0.04;
-        this.mouse.y += (this.targetMouse.y - this.mouse.y) * 0.04;
+        // Smooth mouse
+        this.mouse.x += (this.targetMouse.x - this.mouse.x) * 0.05;
+        this.mouse.y += (this.targetMouse.y - this.mouse.y) * 0.05;
 
-        // Update shader uniforms
+        // Update mesh
         if (this.mesh) {
             this.mesh.material.uniforms.uTime.value = time;
             this.mesh.material.uniforms.uMouse.value.set(this.mouse.x, this.mouse.y);
-
-            // Subtle rotation based on mouse
-            this.mesh.rotation.z = this.mouse.x * 0.03;
+            this.mesh.rotation.z = this.mouse.x * 0.1;
         }
+
+        // Update stars (twinkle)
+        if (this.stars) {
+            this.stars.material.uniforms.uTime.value = time;
+            this.stars.rotation.y = time * 0.01; // Slow rotation
+        }
+
+        // Subtle camera movement
+        this.camera.position.x = this.mouse.x * 2;
+        this.camera.position.y = this.mouse.y * 1.5;
 
         this.renderer.render(this.scene, this.camera);
     }
 
-    // Theme color update
     updateColors(isDark) {
         if (!this.mesh) return;
         const THREE = this.THREE;
@@ -205,10 +264,10 @@ class ManifoldBackground {
 
 // --- THEME MANAGER ---
 class ThemeManager {
-    constructor(bg) {
+    constructor(meshBg) {
         this.toggleBtn = document.getElementById('theme-toggle');
         this.html = document.documentElement;
-        this.bg = bg;
+        this.meshBg = meshBg;
 
         const savedTheme = localStorage.getItem('theme');
         const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -239,8 +298,8 @@ class ThemeManager {
             lucide.createIcons();
         }
 
-        if (this.bg) {
-            this.bg.updateColors(theme === 'dark');
+        if (this.meshBg) {
+            this.meshBg.updateColors(theme === 'dark');
         }
     }
 }
@@ -248,7 +307,6 @@ class ThemeManager {
 // Start
 document.addEventListener('DOMContentLoaded', () => {
     new TiltEffect();
-    const bg = new ManifoldBackground();
-    new ThemeManager(bg);
+    const meshBg = new MeshBackground();
+    new ThemeManager(meshBg);
 });
-
