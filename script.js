@@ -34,7 +34,7 @@ class TiltEffect {
     }
 }
 
-// --- THREE.JS 3D MESH + STARS BACKGROUND ---
+// --- THREE.JS MESH BACKGROUND ---
 class MeshBackground {
     constructor() {
         this.container = document.getElementById('canvas-container');
@@ -51,96 +51,28 @@ class MeshBackground {
         this.THREE = THREE;
         this.clock = new THREE.Clock();
 
-        // Scene
         this.scene = new THREE.Scene();
 
-        // Camera
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.camera.position.z = 30;
 
-        // Renderer
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setClearColor(0x000000, 0);
         this.container.appendChild(this.renderer.domElement);
 
-        // Create elements
-        this.createStars();
         this.createMesh();
 
-        // Events
         window.addEventListener('resize', () => this.onResize());
         window.addEventListener('mousemove', (e) => this.onMouseMove(e));
 
         this.animate();
     }
 
-    createStars() {
-        const THREE = this.THREE;
-        const starCount = 300;
-
-        const geometry = new THREE.BufferGeometry();
-        const positions = new Float32Array(starCount * 3);
-        const sizes = new Float32Array(starCount);
-
-        for (let i = 0; i < starCount; i++) {
-            // Spread stars across the viewport
-            positions[i * 3] = (Math.random() - 0.5) * 100;
-            positions[i * 3 + 1] = (Math.random() - 0.5) * 60;
-            positions[i * 3 + 2] = (Math.random() - 0.5) * 50 - 10;
-
-            sizes[i] = Math.random() * 2 + 0.5;
-        }
-
-        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-
-        // Custom shader for twinkling stars
-        const material = new THREE.ShaderMaterial({
-            uniforms: {
-                uTime: { value: 0 },
-                uColor: { value: new THREE.Color(0xffffff) }
-            },
-            vertexShader: `
-                attribute float size;
-                varying float vSize;
-                void main() {
-                    vSize = size;
-                    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-                    gl_PointSize = size * (300.0 / -mvPosition.z);
-                    gl_Position = projectionMatrix * mvPosition;
-                }
-            `,
-            fragmentShader: `
-                uniform float uTime;
-                uniform vec3 uColor;
-                varying float vSize;
-                void main() {
-                    // Circular point
-                    float dist = length(gl_PointCoord - vec2(0.5));
-                    if (dist > 0.5) discard;
-                    
-                    // Soft glow
-                    float alpha = 1.0 - smoothstep(0.0, 0.5, dist);
-                    alpha *= 0.6 + 0.4 * sin(uTime * 2.0 + vSize * 10.0); // Twinkle
-                    
-                    gl_FragColor = vec4(uColor, alpha);
-                }
-            `,
-            transparent: true,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
-        });
-
-        this.stars = new THREE.Points(geometry, material);
-        this.scene.add(this.stars);
-    }
-
     createMesh() {
         const THREE = this.THREE;
 
-        // Wave mesh plane
         const geometry = new THREE.PlaneGeometry(80, 80, 50, 50);
 
         const material = new THREE.ShaderMaterial({
@@ -161,12 +93,10 @@ class MeshBackground {
                     vUv = uv;
                     vec3 pos = position;
 
-                    // Smooth waves
                     float wave1 = sin(pos.x * 0.3 + uTime * 0.5) * 2.0;
                     float wave2 = sin(pos.y * 0.2 + uTime * 0.3) * 2.0;
                     float wave3 = sin((pos.x + pos.y) * 0.2 + uTime * 0.4) * 1.5;
 
-                    // Mouse influence
                     float dist = distance(pos.xy * 0.05, uMouse);
                     float mouseWave = exp(-dist * 2.0) * 3.0;
 
@@ -180,17 +110,14 @@ class MeshBackground {
                 uniform vec3 uColor1;
                 uniform vec3 uColor2;
                 uniform vec3 uColor3;
-                uniform float uTime;
                 varying vec2 vUv;
                 varying float vElevation;
 
                 void main() {
-                    // Gradient
                     vec3 color = mix(uColor1, uColor2, vUv.x);
                     color = mix(color, uColor3, vUv.y * 0.5);
                     color = mix(color, uColor2, (vElevation + 5.0) / 10.0 * 0.3);
 
-                    // Fade edges
                     float alpha = smoothstep(0.0, 0.2, vUv.x) * smoothstep(1.0, 0.8, vUv.x);
                     alpha *= smoothstep(0.0, 0.2, vUv.y) * smoothstep(1.0, 0.8, vUv.y);
                     alpha *= 0.15;
@@ -225,24 +152,15 @@ class MeshBackground {
 
         const time = this.clock.getElapsedTime();
 
-        // Smooth mouse
         this.mouse.x += (this.targetMouse.x - this.mouse.x) * 0.05;
         this.mouse.y += (this.targetMouse.y - this.mouse.y) * 0.05;
 
-        // Update mesh
         if (this.mesh) {
             this.mesh.material.uniforms.uTime.value = time;
             this.mesh.material.uniforms.uMouse.value.set(this.mouse.x, this.mouse.y);
             this.mesh.rotation.z = this.mouse.x * 0.1;
         }
 
-        // Update stars (twinkle)
-        if (this.stars) {
-            this.stars.material.uniforms.uTime.value = time;
-            this.stars.rotation.y = time * 0.01; // Slow rotation
-        }
-
-        // Subtle camera movement
         this.camera.position.x = this.mouse.x * 2;
         this.camera.position.y = this.mouse.y * 1.5;
 
