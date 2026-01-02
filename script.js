@@ -19,16 +19,13 @@ class TiltEffect {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
-
-        const rotateX = ((y - centerY) / centerY) * -10;
-        const rotateY = ((x - centerX) / centerX) * 10;
+        const rotateX = ((y - centerY) / centerY) * -8;
+        const rotateY = ((x - centerX) / centerX) * 8;
 
         card.style.setProperty('--mouse-x', `${x}px`);
         card.style.setProperty('--mouse-y', `${y}px`);
-
         card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
     }
 
@@ -37,174 +34,230 @@ class TiltEffect {
     }
 }
 
-// --- ANTIGRAVITY REPULSOR EFFECT ---
-class AntigravityEffect {
+// --- THREE.JS 3D MESH BACKGROUND ---
+class MeshBackground {
     constructor() {
-        this.canvas = document.getElementById('hero-canvas');
-        if (!this.canvas) return;
+        this.container = document.getElementById('canvas-container');
+        if (!this.container) return;
 
-        this.ctx = this.canvas.getContext('2d');
-        this.particles = [];
-        this.resize();
-
-        this.config = {
-            spacing: 50, // Much wider spacing for cleaner look
-            mouseRadius: 250, // Larger void
-            repulsionStrength: 3000,
-            springStrength: 0.05, // Slower, more graceful return
-            friction: 0.92,
-            dashLength: 4, // Smaller dashes
-            dashWidth: 2,
-            color: '#6366f1'
-        };
-
-        this.mouse = { x: -1000, y: -1000 }; // Start off-screen
+        this.scene = null;
+        this.camera = null;
+        this.renderer = null;
+        this.mesh = null;
+        this.mouse = { x: 0, y: 0 };
+        this.targetMouse = { x: 0, y: 0 };
+        this.clock = null;
 
         this.init();
     }
 
-    init() {
-        this.createParticlesGrid();
-        this.addEventListeners();
+    async init() {
+        // Dynamically import Three.js
+        const THREE = await import('https://cdn.jsdelivr.net/npm/three@0.167.0/build/three.module.js');
+        this.THREE = THREE;
+
+        this.clock = new THREE.Clock();
+
+        // Scene
+        this.scene = new THREE.Scene();
+
+        // Camera
+        this.camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        );
+        this.camera.position.z = 30;
+
+        // Renderer
+        this.renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true
+        });
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setClearColor(0x000000, 0);
+        this.container.appendChild(this.renderer.domElement);
+
+        // Create mesh
+        this.createMesh();
+
+        // Events
+        window.addEventListener('resize', () => this.onResize());
+        window.addEventListener('mousemove', (e) => this.onMouseMove(e));
+
+        // Animate
         this.animate();
     }
 
-    resize() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
+    createMesh() {
+        const THREE = this.THREE;
+
+        // Create a plane with many segments for wave effect
+        const geometry = new THREE.PlaneGeometry(80, 80, 50, 50);
+
+        // Custom shader material for gradient + wave
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime: { value: 0 },
+                uMouse: { value: new THREE.Vector2(0, 0) },
+                uColor1: { value: new THREE.Color(0x6366f1) }, // Indigo
+                uColor2: { value: new THREE.Color(0x8b5cf6) }, // Purple
+                uColor3: { value: new THREE.Color(0x0ea5e9) }, // Cyan
+            },
+            vertexShader: `
+                uniform float uTime;
+                uniform vec2 uMouse;
+                varying vec2 vUv;
+                varying float vElevation;
+
+                void main() {
+                    vUv = uv;
+                    vec3 pos = position;
+
+                    // Wave effect
+                    float wave1 = sin(pos.x * 0.3 + uTime * 0.5) * 2.0;
+                    float wave2 = sin(pos.y * 0.2 + uTime * 0.3) * 2.0;
+                    float wave3 = sin((pos.x + pos.y) * 0.2 + uTime * 0.4) * 1.5;
+
+                    // Mouse influence
+                    float dist = distance(pos.xy * 0.05, uMouse);
+                    float mouseWave = exp(-dist * 2.0) * 3.0;
+
+                    pos.z = wave1 + wave2 + wave3 + mouseWave;
+                    vElevation = pos.z;
+
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform vec3 uColor1;
+                uniform vec3 uColor2;
+                uniform vec3 uColor3;
+                uniform float uTime;
+                varying vec2 vUv;
+                varying float vElevation;
+
+                void main() {
+                    // Gradient based on position and elevation
+                    float mixFactor = (vElevation + 5.0) / 10.0;
+                    vec3 color = mix(uColor1, uColor2, vUv.x);
+                    color = mix(color, uColor3, vUv.y * 0.5);
+                    color = mix(color, uColor2, mixFactor * 0.3);
+
+                    // Fade edges
+                    float alpha = smoothstep(0.0, 0.2, vUv.x) * smoothstep(1.0, 0.8, vUv.x);
+                    alpha *= smoothstep(0.0, 0.2, vUv.y) * smoothstep(1.0, 0.8, vUv.y);
+                    alpha *= 0.15; // Overall opacity
+
+                    gl_FragColor = vec4(color, alpha);
+                }
+            `,
+            transparent: true,
+            side: THREE.DoubleSide,
+            wireframe: true
+        });
+
+        this.mesh = new THREE.Mesh(geometry, material);
+        this.mesh.rotation.x = -Math.PI * 0.4;
+        this.mesh.position.y = -10;
+        this.scene.add(this.mesh);
+
+        // Add subtle ambient particles
+        this.createParticles();
     }
 
-    createParticlesGrid() {
-        this.particles = [];
+    createParticles() {
+        const THREE = this.THREE;
+        const particleCount = 100;
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
 
-        // Create a grid of particles covering the screen
-        const cols = Math.ceil(this.canvas.width / this.config.spacing);
-        const rows = Math.ceil(this.canvas.height / this.config.spacing);
-
-        for (let i = 0; i < cols; i++) {
-            for (let j = 0; j < rows; j++) {
-                // Randomize position slightly for organic feel
-                const x = (i * this.config.spacing) + (Math.random() * 10 - 5);
-                const y = (j * this.config.spacing) + (Math.random() * 10 - 5);
-
-                this.particles.push(new DashParticle(x, y));
-            }
+        for (let i = 0; i < particleCount; i++) {
+            positions[i * 3] = (Math.random() - 0.5) * 60;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 60;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 30;
         }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        const material = new THREE.PointsMaterial({
+            color: 0x6366f1,
+            size: 0.15,
+            transparent: true,
+            opacity: 0.4,
+            blending: THREE.AdditiveBlending
+        });
+
+        this.particles = new THREE.Points(geometry, material);
+        this.scene.add(this.particles);
     }
 
-    addEventListeners() {
-        window.addEventListener('resize', () => {
-            this.resize();
-            this.createParticlesGrid();
-        });
+    onResize() {
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
 
-        window.addEventListener('mousemove', (e) => {
-            this.mouse.x = e.clientX;
-            this.mouse.y = e.clientY;
-        });
-
-        window.addEventListener('mouseleave', () => {
-            this.mouse.x = -1000;
-            this.mouse.y = -1000;
-        });
+    onMouseMove(e) {
+        // Normalize mouse position to -1 to 1
+        this.targetMouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        this.targetMouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
     }
 
     animate() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        this.particles.forEach(p => {
-            p.update(this.mouse, this.config);
-            p.draw(this.ctx, this.config);
-        });
-
         requestAnimationFrame(() => this.animate());
+
+        const time = this.clock.getElapsedTime();
+
+        // Smooth mouse following
+        this.mouse.x += (this.targetMouse.x - this.mouse.x) * 0.05;
+        this.mouse.y += (this.targetMouse.y - this.mouse.y) * 0.05;
+
+        // Update uniforms
+        if (this.mesh) {
+            this.mesh.material.uniforms.uTime.value = time;
+            this.mesh.material.uniforms.uMouse.value.set(this.mouse.x, this.mouse.y);
+
+            // Subtle rotation based on mouse
+            this.mesh.rotation.z = this.mouse.x * 0.1;
+        }
+
+        // Rotate particles slowly
+        if (this.particles) {
+            this.particles.rotation.y = time * 0.02;
+        }
+
+        this.renderer.render(this.scene, this.camera);
     }
 
-    updateConfig(newConfig) {
-        this.config = { ...this.config, ...newConfig };
+    // Update colors for theme
+    updateColors(isDark) {
+        if (!this.mesh) return;
+        const THREE = this.THREE;
+
+        if (isDark) {
+            this.mesh.material.uniforms.uColor1.value = new THREE.Color(0x6366f1);
+            this.mesh.material.uniforms.uColor2.value = new THREE.Color(0x8b5cf6);
+            this.mesh.material.uniforms.uColor3.value = new THREE.Color(0x0ea5e9);
+        } else {
+            this.mesh.material.uniforms.uColor1.value = new THREE.Color(0x4f46e5);
+            this.mesh.material.uniforms.uColor2.value = new THREE.Color(0x7c3aed);
+            this.mesh.material.uniforms.uColor3.value = new THREE.Color(0x0284c7);
+        }
     }
 }
 
-class DashParticle {
-    constructor(x, y) {
-        this.originX = x;
-        this.originY = y;
-        this.x = x;
-        this.y = y;
-        this.vx = 0;
-        this.vy = 0;
-        // Random slight angle variation for the dash itself
-        this.angle = Math.random() * Math.PI;
-    }
-
-    update(mouse, config) {
-        // 1. Calculate distance to mouse
-        const dx = mouse.x - this.x;
-        const dy = mouse.y - this.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        // 2. Repulsion Force (Antigravity)
-        if (dist < config.mouseRadius) {
-            const force = (config.mouseRadius - dist) / config.mouseRadius; // 0 to 1
-            const repulsionX = -(dx / dist) * force * 5; // Push away
-            const repulsionY = -(dy / dist) * force * 5;
-
-            this.vx += repulsionX;
-            this.vy += repulsionY;
-        }
-
-        // 3. Spring Force (Return to Origin)
-        const springX = (this.originX - this.x) * config.springStrength;
-        const springY = (this.originY - this.y) * config.springStrength;
-
-        this.vx += springX;
-        this.vy += springY;
-
-        // 4. Physics application
-        this.vx *= config.friction;
-        this.vy *= config.friction;
-
-        this.x += this.vx;
-        this.y += this.vy;
-
-        // Update angle based on velocity for dynamic look
-        if (Math.abs(this.vx) > 0.1 || Math.abs(this.vy) > 0.1) {
-            this.angle = Math.atan2(this.vy, this.vx);
-        }
-    }
-
-    draw(ctx, config) {
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.angle);
-
-        // Draw the dash (pill shape)
-        ctx.fillStyle = config.color;
-
-        // Opacity based on displacement (optional, but looks nice if they fade a bit when idle)
-        ctx.globalAlpha = 0.4; // Increased visibility as requested
-
-        ctx.beginPath();
-        // Rounded rectangle logic
-        ctx.roundRect(-config.dashLength / 2, -config.dashWidth / 2, config.dashLength, config.dashWidth, 1);
-        ctx.fill();
-
-        ctx.restore();
-    }
-}
-
-// Start everything when DOM is ready
 // --- THEME MANAGER ---
 class ThemeManager {
-    constructor(antigravityEffect) {
+    constructor(meshBg) {
         this.toggleBtn = document.getElementById('theme-toggle');
         this.html = document.documentElement;
-        this.antigravity = antigravityEffect;
+        this.meshBg = meshBg;
 
-        // Check local storage or system preference
         const savedTheme = localStorage.getItem('theme');
         const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
         this.currentTheme = savedTheme || (systemDark ? 'dark' : 'light');
 
         this.init();
@@ -225,7 +278,6 @@ class ThemeManager {
         this.html.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
 
-        // Update Icon
         if (this.toggleBtn) {
             const sunIcon = '<i data-lucide="sun" class="h-5 w-5"></i>';
             const moonIcon = '<i data-lucide="moon" class="h-5 w-5"></i>';
@@ -233,10 +285,9 @@ class ThemeManager {
             lucide.createIcons();
         }
 
-        // Update Particles
-        if (this.antigravity) {
-            const particleColor = theme === 'dark' ? '#6366f1' : '#4f46e5';
-            this.antigravity.updateConfig({ color: particleColor });
+        // Update 3D mesh colors
+        if (this.meshBg) {
+            this.meshBg.updateColors(theme === 'dark');
         }
     }
 }
@@ -244,6 +295,6 @@ class ThemeManager {
 // Start everything when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     new TiltEffect();
-    const antigravity = new AntigravityEffect();
-    new ThemeManager(antigravity);
+    const meshBg = new MeshBackground();
+    new ThemeManager(meshBg);
 });
