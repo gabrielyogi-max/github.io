@@ -2,7 +2,6 @@ class ThemeController {
     constructor() {
         this.root = document.documentElement;
         this.button = document.getElementById('theme-toggle');
-        this.media = window.matchMedia('(prefers-color-scheme: light)');
         this.syncButton();
         this.bind();
     }
@@ -23,7 +22,7 @@ class ThemeController {
             try {
                 localStorage.setItem('theme', theme);
             } catch (_) {
-                // The selected theme still works when storage is unavailable.
+                // Theme selection still works when storage is unavailable.
             }
         }
 
@@ -149,10 +148,11 @@ class CardSpotlight {
     }
 }
 
-class GpuMesh {
+class NeuralHorizon {
     constructor() {
         this.container = document.getElementById('gpu-mesh');
         this.hero = document.querySelector('.hero');
+        this.status = document.getElementById('renderer-status');
         if (!this.container || !this.hero) return;
 
         this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -160,108 +160,232 @@ class GpuMesh {
         this.targetPointer = { x: 0, y: 0 };
         this.isVisible = true;
         this.frame = null;
+        this.lastFrame = 0;
+        this.startTime = performance.now();
+        this.isMobile = window.matchMedia('(max-width: 600px)').matches;
+        this.frameInterval = 1000 / (this.isMobile ? 36 : 50);
 
         this.resize = this.resize.bind(this);
         this.animate = this.animate.bind(this);
         this.init();
     }
 
-    async init() {
+    init() {
+        this.canvas = document.createElement('canvas');
+        this.canvas.setAttribute('aria-hidden', 'true');
+        this.container.appendChild(this.canvas);
+
+        this.gl = this.canvas.getContext('webgl2', {
+            alpha: true,
+            antialias: false,
+            depth: false,
+            stencil: false,
+            premultipliedAlpha: false,
+            preserveDrawingBuffer: false,
+            powerPreference: 'high-performance'
+        });
+
+        if (!this.gl) {
+            this.activateFallback();
+            return;
+        }
+
         try {
-            const THREE = await import('https://cdn.jsdelivr.net/npm/three@0.167.0/build/three.module.js');
-            this.THREE = THREE;
-            this.clock = new THREE.Clock();
-            this.scene = new THREE.Scene();
-            this.camera = new THREE.PerspectiveCamera(58, 1, 0.1, 100);
-            this.camera.position.set(0, 1, 25);
+            this.program = this.createProgram();
+            this.uniforms = {
+                resolution: this.gl.getUniformLocation(this.program, 'uResolution'),
+                pointer: this.gl.getUniformLocation(this.program, 'uPointer'),
+                time: this.gl.getUniformLocation(this.program, 'uTime'),
+                accent: this.gl.getUniformLocation(this.program, 'uAccent'),
+                violet: this.gl.getUniformLocation(this.program, 'uViolet'),
+                blue: this.gl.getUniformLocation(this.program, 'uBlue'),
+                light: this.gl.getUniformLocation(this.program, 'uLight')
+            };
 
-            this.renderer = new THREE.WebGLRenderer({
-                antialias: true,
-                alpha: true,
-                powerPreference: 'high-performance'
-            });
-            this.renderer.setClearColor(0x000000, 0);
-            this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
-            this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-            this.container.appendChild(this.renderer.domElement);
-
-            this.createMesh();
-            this.updateColors(document.documentElement.dataset.theme);
+            this.gl.useProgram(this.program);
+            this.setTheme(document.documentElement.dataset.theme);
             this.resize();
             this.bind();
-            this.renderFrame(0);
+            this.updateStatus('WEBGL2 / 1 PASS');
+            this.render(12);
 
             if (!this.reducedMotion) {
                 this.frame = requestAnimationFrame(this.animate);
             }
         } catch (error) {
-            this.container.classList.add('gpu-unavailable');
-            console.info('GPU mesh unavailable; keeping the 2D systems canvas as fallback.', error);
+            console.info('Neural Horizon unavailable; using the static fallback.', error);
+            this.activateFallback();
         }
     }
 
-    createMesh() {
-        const THREE = this.THREE;
-        const geometry = new THREE.PlaneGeometry(72, 54, 64, 48);
-        const material = new THREE.ShaderMaterial({
-            uniforms: {
-                uTime: { value: 0 },
-                uMouse: { value: new THREE.Vector2(0, 0) },
-                uColorA: { value: new THREE.Color(0xa7ff4f) },
-                uColorB: { value: new THREE.Color(0x9d7cff) },
-                uColorC: { value: new THREE.Color(0x5ab7ff) },
-                uOpacity: { value: 0.24 }
-            },
-            vertexShader: `
-                uniform float uTime;
-                uniform vec2 uMouse;
-                varying vec2 vUv;
-                varying float vElevation;
+    createProgram() {
+        const vertexSource = `#version 300 es
+            precision highp float;
+            out vec2 vUv;
 
-                void main() {
-                    vUv = uv;
-                    vec3 transformed = position;
+            void main() {
+                vec2 positions[3] = vec2[3](
+                    vec2(-1.0, -1.0),
+                    vec2(3.0, -1.0),
+                    vec2(-1.0, 3.0)
+                );
+                vec2 position = positions[gl_VertexID];
+                vUv = position * 0.5 + 0.5;
+                gl_Position = vec4(position, 0.0, 1.0);
+            }
+        `;
 
-                    float broadWave = sin(transformed.x * 0.21 + uTime * 0.42) * 2.2;
-                    float crossWave = cos(transformed.y * 0.27 - uTime * 0.31) * 1.7;
-                    float diagonalWave = sin((transformed.x + transformed.y) * 0.16 + uTime * 0.24) * 1.25;
-                    float pointerDistance = distance(transformed.xy * 0.04, uMouse);
-                    float pointerWave = exp(-pointerDistance * 2.4) * 2.8;
+        const fragmentSource = `#version 300 es
+            precision highp float;
 
-                    transformed.z = broadWave + crossWave + diagonalWave + pointerWave;
-                    vElevation = transformed.z;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
+            in vec2 vUv;
+            out vec4 outColor;
+
+            uniform vec2 uResolution;
+            uniform vec2 uPointer;
+            uniform float uTime;
+            uniform vec3 uAccent;
+            uniform vec3 uViolet;
+            uniform vec3 uBlue;
+            uniform float uLight;
+
+            float hash21(vec2 value) {
+                value = fract(value * vec2(123.34, 456.21));
+                value += dot(value, value + 45.32);
+                return fract(value.x * value.y);
+            }
+
+            float coreLine(float distanceToLine, float width) {
+                float antialiasWidth = fwidth(distanceToLine) * 1.35;
+                return 1.0 - smoothstep(width, width + antialiasWidth, abs(distanceToLine));
+            }
+
+            void main() {
+                vec2 fragment = vUv * uResolution;
+                float aspect = uResolution.x / uResolution.y;
+                vec2 point = (fragment - 0.5 * uResolution) / uResolution.y;
+                point += vec2(-uPointer.x * 0.025, -uPointer.y * 0.014);
+
+                float time = uTime;
+                vec3 color = vec3(0.0);
+                float energy = 0.0;
+
+                float edgeFade = 1.0 - smoothstep(0.62, 1.08, abs(point.x));
+                float lowerField = 1.0 - smoothstep(-0.02, 0.31, point.y);
+                float contentProtection = mix(0.18, 1.0, smoothstep(-0.52, 0.04, point.x));
+
+                float flow =
+                    sin(point.x * 2.15 + time * 0.24) +
+                    sin(point.x * 4.4 - time * 0.17) * 0.42 +
+                    cos(point.x * 7.1 + time * 0.11) * 0.18;
+                float auroraDistance = point.y + 0.15 - flow * 0.043;
+                float aurora = exp(-abs(auroraDistance) * 8.5) * lowerField * edgeFade;
+                vec3 auroraColor = mix(uBlue, uViolet, 0.5 + 0.5 * sin(point.x * 1.2 + time * 0.08));
+                color += auroraColor * aurora * 0.72 * mix(0.48, 1.0, contentProtection);
+                energy += aurora * 0.52;
+
+                for (int index = 0; index < 8; index++) {
+                    float layer = float(index);
+                    float baseHeight = -0.39 + layer * 0.062;
+                    float curve =
+                        sin(point.x * (1.7 + layer * 0.055) + time * 0.21 + layer * 0.76) * (0.026 + layer * 0.0018) +
+                        cos(point.x * 3.45 - time * 0.13 + layer * 0.48) * 0.011 +
+                        point.x * point.x * (0.035 + layer * 0.003);
+                    float distanceToFilament = point.y - (baseHeight + curve);
+                    float core = coreLine(distanceToFilament, 0.0012);
+                    float glow = 0.0028 / (abs(distanceToFilament) + 0.0028);
+                    float filament = (core * 0.9 + glow * 0.2) * lowerField * edgeFade;
+
+                    float pulsePosition = fract(time * 0.055 + layer * 0.137) * 1.9 - 0.95;
+                    float pulse = exp(-pow((point.x - pulsePosition) * 17.0, 2.0)) * glow * 1.45;
+                    vec3 layerColor = mix(uAccent, mix(uBlue, uViolet, layer / 7.0), 0.5);
+
+                    color += layerColor * (filament * 1.28 + pulse * 1.08) * lowerField * contentProtection;
+                    energy += filament * 0.78 + pulse * 0.48;
                 }
-            `,
-            fragmentShader: `
-                uniform vec3 uColorA;
-                uniform vec3 uColorB;
-                uniform vec3 uColorC;
-                uniform float uOpacity;
-                varying vec2 vUv;
-                varying float vElevation;
 
-                void main() {
-                    vec3 horizontal = mix(uColorA, uColorB, smoothstep(0.05, 0.95, vUv.x));
-                    vec3 color = mix(horizontal, uColorC, vUv.y * 0.48);
-                    color = mix(color, uColorA, smoothstep(-4.0, 5.0, vElevation) * 0.26);
+                vec2 portalCenter = vec2(0.43 * aspect, 0.065) + uPointer * vec2(0.022, 0.012);
+                vec2 portalVector = point - portalCenter;
+                float portalRadius = length(portalVector * vec2(1.0, 1.08));
+                float portalAngle = atan(portalVector.y, portalVector.x);
 
-                    float edgeX = smoothstep(0.0, 0.16, vUv.x) * smoothstep(1.0, 0.84, vUv.x);
-                    float edgeY = smoothstep(0.0, 0.14, vUv.y) * smoothstep(1.0, 0.86, vUv.y);
-                    gl_FragColor = vec4(color, uOpacity * edgeX * edgeY);
-                }
-            `,
-            transparent: true,
-            wireframe: true,
-            side: THREE.DoubleSide,
-            depthWrite: false
-        });
+                float firstRingTarget = 0.31 + sin(portalAngle * 6.0 - time * 0.31) * 0.009;
+                float secondRingTarget = 0.395 + cos(portalAngle * 9.0 + time * 0.22) * 0.006;
+                float firstRingDistance = portalRadius - firstRingTarget;
+                float secondRingDistance = portalRadius - secondRingTarget;
+                float firstRing = coreLine(firstRingDistance, 0.0014) + 0.0023 / (abs(firstRingDistance) + 0.0023);
+                float secondRing = coreLine(secondRingDistance, 0.0011) + 0.0018 / (abs(secondRingDistance) + 0.0018);
+                float portalFade = smoothstep(0.58, 0.2, portalRadius);
 
-        this.mesh = new THREE.Mesh(geometry, material);
-        this.mesh.rotation.x = -Math.PI * 0.39;
-        this.mesh.rotation.z = -0.08;
-        this.mesh.position.set(10, -12, -5);
-        this.scene.add(this.mesh);
+                float spokes = pow(max(0.0, cos(portalAngle * 18.0 - time * 0.46)), 30.0);
+                spokes *= smoothstep(0.41, 0.27, portalRadius) * smoothstep(0.16, 0.25, portalRadius);
+
+                color += uAccent * firstRing * 0.55;
+                color += uBlue * secondRing * 0.42;
+                color += mix(uViolet, uBlue, 0.5) * spokes * 0.7;
+                energy += (firstRing * 0.26 + secondRing * 0.2 + spokes * 0.36) * portalFade;
+
+                vec2 starGrid = (point + vec2(1.4, 0.9)) * vec2(20.0, 23.0);
+                vec2 starCell = floor(starGrid);
+                vec2 starLocal = fract(starGrid) - 0.5;
+                float randomValue = hash21(starCell);
+                float starShape = 1.0 - smoothstep(0.018, 0.075, length(starLocal));
+                float starGate = step(0.925, randomValue);
+                float twinkle = 0.42 + 0.58 * sin(time * (0.7 + randomValue) + randomValue * 25.0);
+                float stars = starShape * starGate * twinkle;
+                color += mix(uAccent, uBlue, randomValue) * stars * 0.95;
+                energy += stars * 0.48;
+
+                vec2 cursor = vec2(uPointer.x * aspect * 0.5, uPointer.y * 0.5);
+                float cursorGlow = exp(-dot(point - cursor, point - cursor) * 8.0);
+                color += uAccent * cursorGlow * 0.16;
+                energy += cursorGlow * 0.11;
+
+                float vignette = 1.0 - smoothstep(0.45, 1.12, length(point * vec2(0.72, 1.0)));
+                color *= vignette;
+                energy *= vignette;
+
+                color *= 1.65;
+                color = color / (vec3(1.0) + color);
+                color = pow(max(color, vec3(0.0)), vec3(0.86));
+
+                float themeScale = mix(1.22, 0.76, uLight);
+                float alphaLimit = mix(0.84, 0.52, uLight);
+                float alpha = clamp(energy * themeScale, 0.0, alphaLimit);
+                outColor = vec4(color, alpha);
+            }
+        `;
+
+        const vertexShader = this.compileShader(this.gl.VERTEX_SHADER, vertexSource);
+        const fragmentShader = this.compileShader(this.gl.FRAGMENT_SHADER, fragmentSource);
+        const program = this.gl.createProgram();
+        this.gl.attachShader(program, vertexShader);
+        this.gl.attachShader(program, fragmentShader);
+        this.gl.linkProgram(program);
+
+        if (!this.gl.getProgramParameter(program, this.gl.LINK_STATUS)) {
+            const message = this.gl.getProgramInfoLog(program);
+            this.gl.deleteProgram(program);
+            throw new Error(`Neural Horizon program link failed: ${message}`);
+        }
+
+        this.gl.deleteShader(vertexShader);
+        this.gl.deleteShader(fragmentShader);
+        return program;
+    }
+
+    compileShader(type, source) {
+        const shader = this.gl.createShader(type);
+        this.gl.shaderSource(shader, source);
+        this.gl.compileShader(shader);
+
+        if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
+            const message = this.gl.getShaderInfoLog(shader);
+            this.gl.deleteShader(shader);
+            throw new Error(`Neural Horizon shader compilation failed: ${message}`);
+        }
+
+        return shader;
     }
 
     bind() {
@@ -279,26 +403,27 @@ class GpuMesh {
         });
 
         window.addEventListener('themechange', (event) => {
-            this.updateColors(event.detail.theme);
-            if (this.reducedMotion) this.renderFrame(0);
+            this.setTheme(event.detail.theme);
+            if (this.reducedMotion) this.render(12);
         });
 
         document.addEventListener('visibilitychange', () => {
             this.isVisible = !document.hidden;
-            if (this.isVisible && !this.reducedMotion && !this.frame) {
-                this.clock.getDelta();
-                this.frame = requestAnimationFrame(this.animate);
-            }
+            if (this.isVisible) this.requestFrame();
+        });
+
+        this.canvas.addEventListener('webglcontextlost', (event) => {
+            event.preventDefault();
+            if (this.frame) cancelAnimationFrame(this.frame);
+            this.frame = null;
+            this.updateStatus('GPU FIELD / PAUSED');
         });
 
         if ('IntersectionObserver' in window) {
             this.visibilityObserver = new IntersectionObserver(
                 ([entry]) => {
                     this.isVisible = entry.isIntersecting && !document.hidden;
-                    if (this.isVisible && !this.reducedMotion && !this.frame) {
-                        this.clock.getDelta();
-                        this.frame = requestAnimationFrame(this.animate);
-                    }
+                    if (this.isVisible) this.requestFrame();
                 },
                 { threshold: 0.02 }
             );
@@ -307,240 +432,85 @@ class GpuMesh {
     }
 
     resize() {
-        if (!this.renderer || !this.camera) return;
+        if (!this.gl) return;
+
         const rect = this.hero.getBoundingClientRect();
         const width = Math.max(1, Math.round(rect.width));
         const height = Math.max(1, Math.round(rect.height));
-        this.camera.aspect = width / height;
-        this.camera.updateProjectionMatrix();
-        this.renderer.setSize(width, height, false);
-        if (this.reducedMotion) this.renderFrame(0);
-    }
+        const mobile = width < 600;
+        const memory = navigator.deviceMemory || 8;
+        let renderScale = mobile ? 0.52 : width < 1050 ? 0.6 : 0.68;
+        if (memory <= 4) renderScale -= 0.08;
 
-    updateColors(theme) {
-        if (!this.mesh || !this.THREE) return;
-        const isLight = theme === 'light';
-        const uniforms = this.mesh.material.uniforms;
-        uniforms.uColorA.value.setHex(isLight ? 0x4b8f08 : 0xa7ff4f);
-        uniforms.uColorB.value.setHex(isLight ? 0x694ad6 : 0x9d7cff);
-        uniforms.uColorC.value.setHex(isLight ? 0x1673ba : 0x5ab7ff);
-        uniforms.uOpacity.value = isLight ? 0.16 : 0.25;
-    }
-
-    renderFrame(time) {
-        if (!this.renderer || !this.mesh) return;
-        const uniforms = this.mesh.material.uniforms;
-        uniforms.uTime.value = time;
-        uniforms.uMouse.value.set(this.pointer.x, this.pointer.y);
-        this.renderer.render(this.scene, this.camera);
-    }
-
-    animate() {
-        this.frame = null;
-        if (!this.isVisible) return;
-
-        this.pointer.x += (this.targetPointer.x - this.pointer.x) * 0.045;
-        this.pointer.y += (this.targetPointer.y - this.pointer.y) * 0.045;
-
-        const time = this.clock.getElapsedTime();
-        this.mesh.rotation.z = -0.08 + this.pointer.x * 0.045;
-        this.camera.position.x = this.pointer.x * 1.4;
-        this.camera.position.y = 1 + this.pointer.y * 0.8;
-        this.renderFrame(time);
-        this.frame = requestAnimationFrame(this.animate);
-    }
-}
-
-class SystemsCanvas {
-    constructor() {
-        this.canvas = document.getElementById('systems-canvas');
-        this.hero = document.querySelector('.hero');
-        if (!this.canvas || !this.hero) return;
-
-        this.context = this.canvas.getContext('2d');
-        this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        this.pointer = { x: 0, y: 0, active: false };
-        this.nodes = [];
-        this.frame = null;
-        this.lastWidth = 0;
-        this.lastHeight = 0;
-        this.isVisible = true;
-
-        this.resize = this.resize.bind(this);
-        this.draw = this.draw.bind(this);
-        this.init();
-    }
-
-    init() {
-        this.resize();
-        this.readColors();
-
-        window.addEventListener('resize', this.resize, { passive: true });
-        window.addEventListener('themechange', () => {
-            this.readColors();
-            if (this.reducedMotion) this.drawStatic();
-        });
-
-        this.hero.addEventListener('pointermove', (event) => {
-            const rect = this.canvas.getBoundingClientRect();
-            this.pointer.x = event.clientX - rect.left;
-            this.pointer.y = event.clientY - rect.top;
-            this.pointer.active = true;
-        });
-
-        this.hero.addEventListener('pointerleave', () => {
-            this.pointer.active = false;
-        });
-
-        document.addEventListener('visibilitychange', () => {
-            this.isVisible = !document.hidden;
-            if (this.isVisible && !this.reducedMotion && !this.frame) {
-                this.frame = requestAnimationFrame(this.draw);
-            }
-        });
-
-        if (this.reducedMotion) {
-            this.drawStatic();
-        } else {
-            this.frame = requestAnimationFrame(this.draw);
-        }
-    }
-
-    readColors() {
-        const styles = getComputedStyle(document.documentElement);
-        const accent = styles.getPropertyValue('--accent-rgb').trim() || '167, 255, 79';
-        const isLight = document.documentElement.dataset.theme === 'light';
-        this.nodeColor = `rgba(${accent}, ${isLight ? 0.55 : 0.68})`;
-        this.lineColor = `rgba(${accent}, ${isLight ? 0.1 : 0.12})`;
-        this.pointerColor = `rgba(${accent}, ${isLight ? 0.22 : 0.28})`;
-    }
-
-    resize() {
-        const rect = this.hero.getBoundingClientRect();
-        const width = Math.max(1, Math.round(rect.width));
-        const height = Math.max(1, Math.round(rect.height));
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-        this.canvas.width = Math.round(width * dpr);
-        this.canvas.height = Math.round(height * dpr);
+        this.isMobile = mobile;
+        this.frameInterval = 1000 / (mobile ? 36 : 50);
+        this.canvas.width = Math.min(1280, Math.max(1, Math.round(width * renderScale)));
+        this.canvas.height = Math.min(800, Math.max(1, Math.round(height * renderScale)));
         this.canvas.style.width = `${width}px`;
         this.canvas.style.height = `${height}px`;
-        this.context.setTransform(dpr, 0, 0, dpr, 0, 0);
+        this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+        this.gl.useProgram(this.program);
+        this.gl.uniform2f(this.uniforms.resolution, this.canvas.width, this.canvas.height);
 
-        if (!this.nodes.length || Math.abs(width - this.lastWidth) > 120) {
-            this.createNodes(width, height);
-        } else {
-            const scaleX = width / this.lastWidth;
-            const scaleY = height / this.lastHeight;
-            this.nodes.forEach((node) => {
-                node.x *= scaleX;
-                node.y *= scaleY;
-            });
-        }
-
-        this.width = width;
-        this.height = height;
-        this.lastWidth = width;
-        this.lastHeight = height;
-
-        if (this.reducedMotion) this.drawStatic();
+        if (this.reducedMotion) this.render(12);
     }
 
-    createNodes(width, height) {
-        const count = width < 700 ? 28 : Math.min(62, Math.round(width / 24));
-        this.nodes = Array.from({ length: count }, () => ({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            vx: (Math.random() - 0.5) * 0.16,
-            vy: (Math.random() - 0.5) * 0.16,
-            radius: Math.random() * 1.3 + 0.55
-        }));
+    setTheme(theme) {
+        if (!this.gl || !this.program) return;
+
+        const isLight = theme === 'light';
+        const accent = isLight ? [0.294, 0.561, 0.031] : [0.655, 1.0, 0.31];
+        const violet = isLight ? [0.412, 0.29, 0.839] : [0.616, 0.486, 1.0];
+        const blue = isLight ? [0.086, 0.451, 0.729] : [0.353, 0.718, 1.0];
+
+        this.gl.useProgram(this.program);
+        this.gl.uniform3fv(this.uniforms.accent, accent);
+        this.gl.uniform3fv(this.uniforms.violet, violet);
+        this.gl.uniform3fv(this.uniforms.blue, blue);
+        this.gl.uniform1f(this.uniforms.light, isLight ? 1 : 0);
     }
 
-    updateNodes() {
-        this.nodes.forEach((node) => {
-            node.x += node.vx;
-            node.y += node.vy;
+    render(time) {
+        if (!this.gl || !this.program) return;
 
-            if (node.x < -20) node.x = this.width + 20;
-            if (node.x > this.width + 20) node.x = -20;
-            if (node.y < -20) node.y = this.height + 20;
-            if (node.y > this.height + 20) node.y = -20;
-
-            if (this.pointer.active) {
-                const dx = this.pointer.x - node.x;
-                const dy = this.pointer.y - node.y;
-                const distance = Math.hypot(dx, dy);
-
-                if (distance < 160 && distance > 0) {
-                    const pull = (160 - distance) / 16000;
-                    node.x += dx * pull;
-                    node.y += dy * pull;
-                }
-            }
-        });
+        this.gl.clearColor(0, 0, 0, 0);
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+        this.gl.useProgram(this.program);
+        this.gl.uniform1f(this.uniforms.time, time);
+        this.gl.uniform2f(this.uniforms.pointer, this.pointer.x, this.pointer.y);
+        this.gl.drawArrays(this.gl.TRIANGLES, 0, 3);
     }
 
-    render() {
-        this.context.clearRect(0, 0, this.width, this.height);
-
-        for (let i = 0; i < this.nodes.length; i += 1) {
-            const node = this.nodes[i];
-
-            for (let j = i + 1; j < this.nodes.length; j += 1) {
-                const other = this.nodes[j];
-                const dx = node.x - other.x;
-                const dy = node.y - other.y;
-                const distance = Math.hypot(dx, dy);
-
-                if (distance > 145) continue;
-                this.context.globalAlpha = 1 - distance / 145;
-                this.context.strokeStyle = this.lineColor;
-                this.context.lineWidth = 1;
-                this.context.beginPath();
-                this.context.moveTo(node.x, node.y);
-                this.context.lineTo(other.x, other.y);
-                this.context.stroke();
-            }
-
-            this.context.globalAlpha = 1;
-            this.context.fillStyle = this.nodeColor;
-            this.context.beginPath();
-            this.context.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-            this.context.fill();
-        }
-
-        if (this.pointer.active) {
-            const gradient = this.context.createRadialGradient(
-                this.pointer.x,
-                this.pointer.y,
-                0,
-                this.pointer.x,
-                this.pointer.y,
-                120
-            );
-            gradient.addColorStop(0, this.pointerColor);
-            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-            this.context.fillStyle = gradient;
-            this.context.beginPath();
-            this.context.arc(this.pointer.x, this.pointer.y, 120, 0, Math.PI * 2);
-            this.context.fill();
-        }
-
-        this.context.globalAlpha = 1;
-    }
-
-    draw() {
+    animate(now) {
         this.frame = null;
-        if (!this.isVisible) return;
-        this.updateNodes();
-        this.render();
-        this.frame = requestAnimationFrame(this.draw);
+        if (!this.isVisible || this.reducedMotion) return;
+
+        if (now - this.lastFrame < this.frameInterval) {
+            this.requestFrame();
+            return;
+        }
+
+        this.lastFrame = now;
+        this.pointer.x += (this.targetPointer.x - this.pointer.x) * 0.055;
+        this.pointer.y += (this.targetPointer.y - this.pointer.y) * 0.055;
+        this.render((now - this.startTime) / 1000);
+        this.requestFrame();
     }
 
-    drawStatic() {
-        if (!this.context || !this.width || !this.height) return;
-        this.render();
+    requestFrame() {
+        if (!this.frame && this.isVisible && !this.reducedMotion) {
+            this.frame = requestAnimationFrame(this.animate);
+        }
+    }
+
+    activateFallback() {
+        this.container.classList.add('gpu-unavailable');
+        this.canvas?.remove();
+        this.updateStatus('STATIC FIELD / FALLBACK');
+    }
+
+    updateStatus(message) {
+        if (this.status) this.status.textContent = message;
     }
 }
 
@@ -550,8 +520,7 @@ function initializePortfolio() {
     new NavigationController();
     new RevealController();
     new CardSpotlight();
-    new GpuMesh();
-    new SystemsCanvas();
+    new NeuralHorizon();
 
     const year = document.getElementById('current-year');
     if (year) year.textContent = String(new Date().getFullYear());

@@ -331,6 +331,7 @@ svg {
 /* Hero */
 .hero {
     position: relative;
+    isolation: isolate;
     display: flex;
     min-height: 860px;
     align-items: center;
@@ -338,33 +339,33 @@ svg {
     border-bottom: 1px solid var(--line);
 }
 
-#gpu-mesh,
-#systems-canvas {
+#gpu-mesh {
     position: absolute;
     z-index: 0;
     inset: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
-}
-
-#gpu-mesh {
-    opacity: 0.82;
-    mask-image: linear-gradient(90deg, transparent 4%, rgba(0, 0, 0, 0.45) 34%, #000 66%, #000);
+    opacity: 1;
+    mask-image: linear-gradient(90deg, transparent 1%, rgba(0, 0, 0, 0.62) 27%, #000 60%, #000);
 }
 
 #gpu-mesh canvas {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;
 }
 
-#systems-canvas {
-    opacity: 0.42;
+#gpu-mesh.gpu-unavailable {
+    background:
+        radial-gradient(circle at 76% 42%, rgba(167, 255, 79, 0.14), transparent 24%),
+        repeating-radial-gradient(ellipse at 72% 88%, rgba(90, 183, 255, 0.1) 0 1px, transparent 1px 28px);
 }
 
 [data-theme="light"] #gpu-mesh {
-    opacity: 0.56;
+    opacity: 0.72;
 }
 
 .hero::before {
@@ -373,7 +374,7 @@ svg {
     inset: 0;
     background:
         radial-gradient(circle at 76% 47%, rgba(var(--accent-rgb), 0.08), transparent 28%),
-        linear-gradient(90deg, var(--bg) 0%, rgba(7, 8, 10, 0.82) 43%, rgba(7, 8, 10, 0.25) 72%, var(--bg) 100%);
+        linear-gradient(90deg, var(--bg) 0%, rgba(7, 8, 10, 0.84) 40%, rgba(7, 8, 10, 0.12) 70%, rgba(7, 8, 10, 0.48) 100%);
     content: "";
     pointer-events: none;
 }
@@ -381,7 +382,7 @@ svg {
 [data-theme="light"] .hero::before {
     background:
         radial-gradient(circle at 76% 47%, rgba(var(--accent-rgb), 0.1), transparent 28%),
-        linear-gradient(90deg, var(--bg) 0%, rgba(235, 236, 231, 0.82) 43%, rgba(235, 236, 231, 0.25) 72%, var(--bg) 100%);
+        linear-gradient(90deg, var(--bg) 0%, rgba(235, 236, 231, 0.85) 40%, rgba(235, 236, 231, 0.18) 70%, rgba(235, 236, 231, 0.52) 100%);
 }
 
 .hero-grid-overlay {
@@ -2162,12 +2163,8 @@ svg {
     }
 
     #gpu-mesh {
-        opacity: 0.58;
-        mask-image: linear-gradient(to bottom, transparent 2%, rgba(0, 0, 0, 0.52) 28%, #000 74%, transparent);
-    }
-
-    #systems-canvas {
-        opacity: 0.32;
+        opacity: 0.78;
+        mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.6) 24%, #000 76%, transparent);
     }
 
     .hero-eyebrow {
