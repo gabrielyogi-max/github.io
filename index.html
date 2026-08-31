@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#07080a">
+    <meta name="theme-color" content="#09090b">
     <meta name="description"
         content="Portfólio de Gabriel Yogi, engenheiro de Machine Learning especializado em LLM systems, inferência de alto desempenho, CUDA, Triton, agentes e RAG.">
     <meta name="keywords"
@@ -106,24 +106,24 @@
 
     <main id="main-content">
         <section class="hero" id="top">
-            <div id="gpu-mesh" aria-hidden="true"></div>
             <div class="hero-grid-overlay" aria-hidden="true"></div>
 
             <div class="shell hero-layout">
                 <div class="hero-copy">
                     <div class="hero-eyebrow reveal">
                         <span class="status-dot" aria-hidden="true"></span>
-                        <span>Pesquisa independente · São Paulo, Brasil</span>
+                        <span>LLM Systems · Performance · Reliability</span>
                     </div>
 
                     <p class="hero-name reveal">Gabriel Yogi / Machine Learning Engineer</p>
                     <h1 class="reveal">
-                        Eu construo o <span>motor</span><br>
-                        por trás da IA.
+                        Modelos<br>
+                        <span>impressionam.</span><br>
+                        Sistemas entregam.
                     </h1>
                     <p class="hero-intro reveal">
-                        Sistemas de LLM do kernel ao produto — inferência GPU/CPU, treinamento distribuído,
-                        agentes confiáveis, RAG e dados em escala.
+                        Eu projeto a infraestrutura que transforma pesquisa em produto: kernels CUDA e Triton,
+                        runtimes de inferência, treinamento distribuído, agentes e dados em escala.
                     </p>
 
                     <div class="hero-actions reveal">
@@ -151,46 +151,51 @@
                     </div>
                 </div>
 
-                <div class="system-visual reveal" aria-label="Visão do stack técnico de Gabriel">
-                    <div class="visual-topline">
-                        <span class="mono"><span class="pulse-dot"></span> SYSTEMS ONLINE</span>
-                        <span class="mono" id="renderer-status">GPU FIELD / INIT</span>
+                <aside class="engine-board reveal" aria-label="Resumo técnico e resultados do MegaGemm">
+                    <div class="board-header mono">
+                        <span>MEGAGEMM / PERF DOSSIER</span>
+                        <span>BUILD 2026.08</span>
                     </div>
 
-                    <div class="orbit-stage" aria-hidden="true">
-                        <div class="orbit orbit-one"></div>
-                        <div class="orbit orbit-two"></div>
-                        <div class="orbit orbit-three"></div>
-                        <div class="core-node">
-                            <span>LLM</span>
-                            <strong>CORE</strong>
-                        </div>
-                        <span class="satellite satellite-a">CUDA</span>
-                        <span class="satellite satellite-b">TRITON</span>
-                        <span class="satellite satellite-c">C++</span>
-                        <span class="satellite satellite-d">PYTORCH</span>
+                    <div class="board-score">
+                        <p class="mono">GEOMEAN THROUGHPUT / vLLM 0.27.1</p>
+                        <strong>93.1<sup>%</sup></strong>
+                        <span>um runtime independente chegando perto do principal baseline de serving</span>
                     </div>
 
-                    <div class="visual-metrics">
-                        <div>
-                            <strong>160+</strong>
-                            <span>GPU entry points</span>
+                    <div class="benchmark-bars" aria-label="Indicadores comparativos">
+                        <div class="benchmark-row">
+                            <div class="benchmark-label mono"><span>GPU</span><b>93.1</b></div>
+                            <div class="benchmark-track"><i style="--value: 93.1%"></i></div>
                         </div>
-                        <div>
-                            <strong>2B</strong>
-                            <span>MoE parameters</span>
+                        <div class="benchmark-row">
+                            <div class="benchmark-label mono"><span>PREFIX</span><b>102.8</b></div>
+                            <div class="benchmark-track"><i style="--value: 100%"></i></div>
                         </div>
-                        <div>
-                            <strong>15B</strong>
-                            <span>training tokens</span>
+                        <div class="benchmark-row">
+                            <div class="benchmark-label mono"><span>CPU</span><b>1.286×</b></div>
+                            <div class="benchmark-track"><i style="--value: 78%"></i></div>
                         </div>
                     </div>
-                </div>
+
+                    <div class="runtime-path" aria-label="Caminho de execução do runtime">
+                        <div><span class="mono">01</span><strong>REQUEST</strong></div>
+                        <i aria-hidden="true"></i>
+                        <div><span class="mono">02</span><strong>SCHEDULER</strong></div>
+                        <i aria-hidden="true"></i>
+                        <div><span class="mono">03</span><strong>CUDA / TRITON</strong></div>
+                    </div>
+
+                    <div class="board-footer mono">
+                        <span><b></b> REPRODUCIBLE BENCHMARK</span>
+                        <span>160+ GPU ENTRY POINTS</span>
+                    </div>
+                </aside>
             </div>
 
             <div class="shell hero-footnote" aria-hidden="true">
-                <span class="mono">INTERACTIVE NEURAL HORIZON</span>
-                <span class="scroll-line"></span>
+                <span class="mono">SCROLL / SELECTED SYSTEMS</span>
+                <span class="scroll-rule"></span>
             </div>
         </section>
 
