@@ -2774,11 +2774,15 @@ body {
 .featured-project,
 .project-card,
 .architecture-panel,
-.impact-card,
 .expertise-panel {
     border-radius: 2px;
     background-color: var(--surface-strong);
     box-shadow: none;
+}
+
+.impact-card {
+    border-radius: 0;
+    background: transparent;
 }
 
 .project-card::after,
@@ -2795,6 +2799,75 @@ body {
 .section-index,
 .project-number {
     color: var(--accent);
+}
+
+.light-heading .section-index {
+    color: var(--accent);
+}
+
+.evidence-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px 14px;
+}
+
+.evidence-links a,
+.impact-evidence a,
+.board-footer a {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border-bottom: 1px solid var(--line-strong);
+    color: var(--text-soft);
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 0.045em;
+    line-height: 1.8;
+    text-transform: uppercase;
+    transition: border-color 160ms ease, color 160ms ease;
+}
+
+.evidence-links a:hover,
+.board-footer a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.evidence-links svg,
+.impact-evidence svg {
+    width: 11px;
+    height: 11px;
+}
+
+.project-footer .evidence-links {
+    max-width: 58%;
+}
+
+.card-footer .evidence-links {
+    max-width: 68%;
+}
+
+.impact-evidence {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px 12px;
+    margin-top: 16px;
+}
+
+.impact-evidence a {
+    border-color: color-mix(in srgb, var(--text-invert) 28%, transparent);
+    color: color-mix(in srgb, var(--text-invert) 72%, transparent);
+}
+
+.impact-evidence a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.board-footer a {
+    color: var(--text-faint);
 }
 
 .js .reveal {
@@ -2931,5 +3004,16 @@ body {
 
     .benchmark-row {
         grid-template-columns: 78px 1fr;
+    }
+
+    .card-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .project-footer .evidence-links,
+    .card-footer .evidence-links {
+        max-width: 100%;
+        justify-content: flex-start;
     }
 }

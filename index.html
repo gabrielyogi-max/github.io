@@ -6,13 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#09090b">
     <meta name="description"
-        content="Portfólio de Gabriel Yogi, engenheiro de Machine Learning especializado em LLM systems, inferência de alto desempenho, CUDA, Triton, agentes e RAG.">
+        content="Portfólio de Gabriel Yogi, LLM Systems Engineer especializado em inferência de alto desempenho, CUDA, Triton, runtimes, agentes e RAG.">
     <meta name="keywords"
-        content="Gabriel Yogi, Machine Learning Engineer, LLM Systems, CUDA, Triton, PyTorch, IA Generativa, RAG">
+        content="Gabriel Yogi, LLM Systems Engineer, ML Systems, CUDA, Triton, PyTorch, inferência de LLM, RAG">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Gabriel Yogi — LLM Systems Engineer">
     <meta property="og:description"
         content="Sistemas de IA do kernel ao produto: inferência, treinamento, agentes e dados em escala.">
+    <meta property="og:url" content="https://madrasle.github.io/">
+    <link rel="canonical" href="https://madrasle.github.io/">
 
     <title>Gabriel Yogi — LLM Systems Engineer</title>
 
@@ -41,7 +43,7 @@
             "@context": "https://schema.org",
             "@type": "Person",
             "name": "Gabriel Yogi",
-            "jobTitle": "Machine Learning Engineer",
+            "jobTitle": "LLM Systems Engineer",
             "email": "mailto:gabriel.yukio2205@email.com",
             "sameAs": [
                 "https://github.com/MadrasLe",
@@ -69,7 +71,7 @@
                 <span class="brand-mark" aria-hidden="true">GY</span>
                 <span class="brand-copy">
                     <strong>Gabriel Yogi</strong>
-                    <small>ML Systems Engineer</small>
+                    <small>LLM Systems Engineer</small>
                 </span>
             </a>
 
@@ -115,7 +117,7 @@
                         <span>LLM Systems · Performance · Reliability</span>
                     </div>
 
-                    <p class="hero-name reveal">Gabriel Yogi / Machine Learning Engineer</p>
+                    <p class="hero-name reveal">Gabriel Yogi / LLM Systems Engineer</p>
                     <h1 class="reveal">
                         Modelos<br>
                         <span>impressionam.</span><br>
@@ -160,7 +162,7 @@
                     <div class="board-score">
                         <p class="mono">GEOMEAN THROUGHPUT / vLLM 0.27.1</p>
                         <strong>93.1<sup>%</sup></strong>
-                        <span>um runtime independente chegando perto do principal baseline de serving</span>
+                        <span>Qwen 2.5 3B · FP16 · 1× NVIDIA L4 · seis workloads pareados</span>
                     </div>
 
                     <div class="benchmark-bars" aria-label="Indicadores comparativos">
@@ -188,7 +190,8 @@
 
                     <div class="board-footer mono">
                         <span><b></b> REPRODUCIBLE BENCHMARK</span>
-                        <span>160+ GPU ENTRY POINTS</span>
+                        <a href="https://github.com/MadrasLe/MegaGemm/blob/main/docs/BENCHMARKS.md" target="_blank"
+                            rel="noopener noreferrer">VIEW EVIDENCE ↗</a>
                     </div>
                 </aside>
             </div>
@@ -252,15 +255,15 @@
                         <div class="project-proof-grid">
                             <div>
                                 <strong>93,1%</strong>
-                                <span>do throughput geométrico do vLLM 0.27.1</span>
+                                <span>geomean vs. vLLM 0.27.1 · Qwen 2.5 3B FP16 · L4</span>
                             </div>
                             <div>
                                 <strong>1,286×</strong>
-                                <span>throughput CPU pareado vs. llama.cpp</span>
+                                <span>geomean CPU vs. llama.cpp · Qwen 2.5 0.5B · 4 batches</span>
                             </div>
                             <div>
                                 <strong>102,8%</strong>
-                                <span>do baseline medido de prefix cache</span>
+                                <span>geomean de exact-prefix reuse vs. vLLM · L4</span>
                             </div>
                         </div>
 
@@ -268,10 +271,14 @@
                             <div class="tag-list" aria-label="Tecnologias do MegaGemm">
                                 <span>CUDA</span><span>Triton</span><span>PyTorch</span><span>C/C++</span>
                             </div>
-                            <a class="text-link" href="https://github.com/MadrasLe/MGRrmsnorm" target="_blank"
-                                rel="noopener noreferrer">
-                                Ver engenharia <i data-lucide="arrow-up-right" aria-hidden="true"></i>
-                            </a>
+                            <div class="evidence-links" aria-label="Evidências do MegaGemm">
+                                <a href="https://github.com/MadrasLe/MegaGemm" target="_blank"
+                                    rel="noopener noreferrer">GitHub <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                                <a href="https://github.com/MadrasLe/MegaGemm/blob/main/docs/BENCHMARKS.md" target="_blank"
+                                    rel="noopener noreferrer">Benchmarks <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                                <a href="https://github.com/MadrasLe/MegaGemm/tree/main/docs" target="_blank"
+                                    rel="noopener noreferrer">Docs <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                            </div>
                         </div>
                     </div>
 
@@ -320,14 +327,16 @@
                         <div class="compact-metrics">
                             <span><strong>2B</strong> total</span>
                             <span><strong>350M</strong> ativos/token</span>
-                            <span><strong>56,2%</strong> zero-shot</span>
+                            <span><strong>56,2%</strong> média zero-shot · lm-eval</span>
                         </div>
                         <div class="card-footer">
                             <div class="tag-list"><span>DeepSpeed</span><span>BF16</span><span>MoE</span></div>
-                            <a href="https://huggingface.co/Madras1/GTLM-1-2B-A350M" target="_blank"
-                                rel="noopener noreferrer" aria-label="Abrir GTLM no Hugging Face">
-                                <i data-lucide="arrow-up-right" aria-hidden="true"></i>
-                            </a>
+                            <div class="evidence-links" aria-label="Evidências do GTLM">
+                                <a href="https://huggingface.co/Madras1/GTLM-1-2B-A350M" target="_blank"
+                                    rel="noopener noreferrer">Model card <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                                <a href="https://github.com/MadrasLe/GTLM" target="_blank"
+                                    rel="noopener noreferrer">Código <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                            </div>
                         </div>
                     </article>
 
@@ -349,10 +358,10 @@
                         </div>
                         <div class="card-footer">
                             <div class="tag-list"><span>AsyncIO</span><span>JGX</span><span>Agents</span></div>
-                            <a href="https://github.com/MadrasLe/JadeAgent" target="_blank" rel="noopener noreferrer"
-                                aria-label="Abrir JadeAgent no GitHub">
-                                <i data-lucide="arrow-up-right" aria-hidden="true"></i>
-                            </a>
+                            <div class="evidence-links" aria-label="Evidência do JadeAgent">
+                                <a href="https://github.com/MadrasLe/JadeAgent" target="_blank"
+                                    rel="noopener noreferrer">GitHub <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                            </div>
                         </div>
                     </article>
 
@@ -370,16 +379,18 @@
                             </div>
                             <div class="card-footer">
                                 <div class="tag-list"><span>Parquet</span><span>SBERT</span><span>Data curation</span></div>
-                                <a href="https://huggingface.co/datasets/Madras1/corpus-ptbr-v1" target="_blank"
-                                    rel="noopener noreferrer" aria-label="Abrir Corpus PT-BR no Hugging Face">
-                                    <i data-lucide="arrow-up-right" aria-hidden="true"></i>
-                                </a>
+                                <div class="evidence-links" aria-label="Evidências do Corpus PT-BR">
+                                    <a href="https://huggingface.co/datasets/Madras1/corpus-ptbr-v1" target="_blank"
+                                        rel="noopener noreferrer">Dataset card <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                                    <a href="https://huggingface.co/datasets/Madras1/corpus-ptbr-v1/tree/main" target="_blank"
+                                        rel="noopener noreferrer">Arquivos <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                                </div>
                             </div>
                         </div>
                         <div class="data-visual" aria-hidden="true">
-                            <div class="data-orb"><strong>6,29B</strong><span>tokens</span></div>
+                            <div class="data-orb"><strong>~6,29B</strong><span>tokens estimados</span></div>
                             <div class="data-stat"><span>8,4M</span><small>documentos</small></div>
-                            <div class="data-stat"><span>17,9GB</span><small>Parquet</small></div>
+                            <div class="data-stat"><span>~17,9GB</span><small>Parquet documentado</small></div>
                             <div class="data-rings"></div>
                         </div>
                     </article>
@@ -396,15 +407,17 @@
                                 verificáveis.</p>
                         </div>
                         <div class="compact-metrics compact-metrics-two">
-                            <span><strong>0,99</strong> MRR</span>
-                            <span><strong>97%</strong> suporte das citações</span>
+                            <span><strong>Top 50 → 5</strong> retrieve + rerank</span>
+                            <span><strong>15k docs</strong> escopo testado · CPU/16GB</span>
                         </div>
                         <div class="card-footer">
                             <div class="tag-list"><span>RAG</span><span>FAISS</span><span>UMAP</span></div>
-                            <a href="https://github.com/MadrasLe/aethermap" target="_blank" rel="noopener noreferrer"
-                                aria-label="Abrir AetherMap no GitHub">
-                                <i data-lucide="arrow-up-right" aria-hidden="true"></i>
-                            </a>
+                            <div class="evidence-links" aria-label="Evidências do AetherMap">
+                                <a href="https://github.com/MadrasLe/aethermap" target="_blank"
+                                    rel="noopener noreferrer">GitHub <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                                <a href="https://aethermap.onrender.com" target="_blank"
+                                    rel="noopener noreferrer">Demo <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                            </div>
                         </div>
                     </article>
 
@@ -420,15 +433,19 @@
                                 publicação automatizada.</p>
                         </div>
                         <div class="download-meter">
-                            <div><strong>33,8 mil</strong><span>downloads acumulados</span></div>
+                            <div><strong>34,4 mil</strong><span>downloads all-time · família + quantizações</span></div>
                             <i><span></span></i>
                         </div>
                         <div class="card-footer">
                             <div class="tag-list"><span>Unsloth</span><span>LoRA</span><span>GGUF</span></div>
-                            <a href="https://github.com/MadrasLe/JadeLLMV-1" target="_blank" rel="noopener noreferrer"
-                                aria-label="Abrir JadeLLM no GitHub">
-                                <i data-lucide="arrow-up-right" aria-hidden="true"></i>
-                            </a>
+                            <div class="evidence-links" aria-label="Evidências do JadeLLM">
+                                <a href="https://github.com/MadrasLe/JadeLLMV-1" target="_blank"
+                                    rel="noopener noreferrer">GitHub <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                                <a href="https://huggingface.co/collections/Madras1/jade-v1" target="_blank"
+                                    rel="noopener noreferrer">HF collection <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                                <a href="https://github.com/MadrasLe/JadeLLMV-1/blob/main/hf_metrics_snapshot.json" target="_blank"
+                                    rel="noopener noreferrer">Métricas <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                            </div>
                         </div>
                     </article>
                 </div>
@@ -468,22 +485,40 @@
                     <article class="impact-card reveal">
                         <span class="mono">GLOBAL RANK</span>
                         <strong>Top 5</strong>
-                        <p>Mercor AI Detection Challenge, com ensemble DeBERTa + XGBoost.</p>
+                        <p>solução selecionada pelos organizadores entre 391 equipes, com DeBERTa + GBM stacking.</p>
+                        <div class="impact-evidence">
+                            <a href="https://github.com/MadrasLe/deberta-gbm-stacking" target="_blank"
+                                rel="noopener noreferrer">Solução <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                            <a href="https://www.kaggle.com/competitions/mercor-ai-detection" target="_blank"
+                                rel="noopener noreferrer">Competição <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                        </div>
                     </article>
                     <article class="impact-card reveal">
                         <span class="mono">MODEL TRAINING</span>
                         <strong>15B</strong>
                         <p>tokens em inglês e português brasileiro processados em uma única A100.</p>
+                        <div class="impact-evidence">
+                            <a href="https://huggingface.co/Madras1/GTLM-1-2B-A350M" target="_blank"
+                                rel="noopener noreferrer">Model card <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                        </div>
                     </article>
                     <article class="impact-card reveal">
                         <span class="mono">OPEN DATA</span>
                         <strong>8,4M</strong>
                         <p>documentos publicados no Corpus PT-BR v1 para pesquisa e treinamento.</p>
+                        <div class="impact-evidence">
+                            <a href="https://huggingface.co/datasets/Madras1/corpus-ptbr-v1" target="_blank"
+                                rel="noopener noreferrer">Dataset card <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                        </div>
                     </article>
                     <article class="impact-card reveal">
-                        <span class="mono">RAG EVALUATION</span>
-                        <strong>Hit@3 1,00</strong>
-                        <p>no benchmark SQuAD-PT usado para avaliar o AetherMap.</p>
+                        <span class="mono">RETRIEVAL SCOPE</span>
+                        <strong>15k docs</strong>
+                        <p>escopo documentado do AetherMap em ambiente CPU com 16 GB de RAM.</p>
+                        <div class="impact-evidence">
+                            <a href="https://github.com/MadrasLe/aethermap" target="_blank"
+                                rel="noopener noreferrer">README técnico <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                        </div>
                     </article>
                 </div>
             </div>
@@ -495,7 +530,7 @@
                     <p class="section-index mono">03 / SOBRE</p>
                     <h2>Generalista no sistema.<br>Especialista na profundidade.</h2>
                     <p class="about-lead">
-                        Sou engenheiro de Machine Learning e pesquisador independente. Meu trabalho conecta a matemática do
+                        Sou LLM Systems Engineer e pesquisador independente. Meu trabalho conecta a matemática do
                         modelo, o comportamento do hardware e a confiabilidade do produto final.
                     </p>
                     <p>
@@ -562,7 +597,7 @@
         <div class="shell footer-inner">
             <div>
                 <strong>Gabriel Yogi</strong>
-                <span>Machine Learning · LLM Systems · Open Source</span>
+                <span>LLM Systems Engineer · Performance · Open Source</span>
             </div>
             <div class="footer-links">
                 <a href="https://github.com/MadrasLe" target="_blank" rel="noopener noreferrer">GitHub</a>
